@@ -25,3 +25,16 @@ function fetchLatestApplicationFromGmail(): Promise<JobApplicationEvent> {
         }, 2000);
     })
 } 
+
+// type results = 
+async function processEmails(){
+    try {
+        let result = await fetchLatestApplicationFromGmail();
+        console.log(`successfully parsed application data for company ${result.companyName} and Current status: ${result.status}`)
+    } catch (error) {
+        console.log(`Network error: ${error}`)
+    }
+}
+
+// console.log(myFirstApplication)
+processEmails();
