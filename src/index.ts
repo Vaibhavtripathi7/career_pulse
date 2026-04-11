@@ -1,3 +1,18 @@
+import express from "express";
+import router from './routes/health.js';
+import type { Response, Request } from "express";
+
+const app = express();
+const PORT = 3000;
+
+app.use(express.json());
+app.use('/api/health', router)
+
+app.listen(PORT, ()=>{
+    console.log("server is alive")
+})
+
+// previous code -- 
 
 interface JobApplicationEvent { 
     companyName: string;
@@ -37,4 +52,3 @@ async function processEmails(){
 }
 
 // console.log(myFirstApplication)
-processEmails();
