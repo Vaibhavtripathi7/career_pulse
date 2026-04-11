@@ -16,4 +16,12 @@ const myFirstApplication: JobApplicationEvent = {
     dateApplied: "something"
 };
 
+function fetchLatestApplicationFromGmail(): Promise<JobApplicationEvent> { 
+    return new Promise((resolve, reject) => {
+        console.log("Fetching from servers");
 
+        setTimeout(()=> {
+            resolve(myFirstApplication);
+        }, 2000);
+    })
+} 
