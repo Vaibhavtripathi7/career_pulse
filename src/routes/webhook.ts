@@ -1,5 +1,6 @@
 import express from  'express';
 import type {Response, Request } from "express";
+import requiresKey from '../middlewares/auth.js';
 
 interface JobApplicationEvent { 
     companyName: string;
@@ -29,7 +30,7 @@ function fetchLatestApplicationFromGmail(): Promise<JobApplicationEvent> {
 } 
 
 const router_hook = express.Router();
-router_hook.post('/', async(req:Request, res:Response)=> {
+router_hook.post('/',requiresKey, async(req:Request, res:Response)=> {
 
     try{
         let results = await fetchLatestApplicationFromGmail();
