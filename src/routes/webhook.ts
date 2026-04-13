@@ -1,6 +1,7 @@
 import express from  'express';
 import type {Response, Request } from "express";
 import requiresKey from '../middlewares/auth.js';
+import prisma from '../db.js';
 
 interface JobApplicationEvent { 
     companyName: string;
@@ -34,7 +35,16 @@ router_hook.post('/',requiresKey, async(req:Request, res:Response)=> {
 
     try{
         let results = await fetchLatestApplicationFromGmail();
-        console.log(`Company name: ${results.companyName} and status: ${results.status}`);
+
+        const savedRecord = await prisma.application.create({
+            data: {
+                companyName: results.companyName,
+                role:results.role,
+                status:results.status,
+                workModel:results.workModel,
+            }
+        });
+        console.log(`saved to database :Company name: ${results.companyName} and status: ${results.status}`);
         res.status(200).send("Webhook processed successfully");
     }catch(error){
         console.log(`Network error! ${error}`);
