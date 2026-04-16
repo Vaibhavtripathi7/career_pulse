@@ -26,6 +26,7 @@ async function fetchemails(){
     }
 
     let main_content = await gmail.users.messages.get({userId: 'me', id: firstmail.id})
-
-    console.log(main_content.data.snippet);
+    return main_content.data.snippet;
 }   
+
+export default fetchemails;
