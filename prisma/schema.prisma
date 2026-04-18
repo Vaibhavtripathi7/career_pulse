@@ -13,6 +13,9 @@ datasource db {
 
 model Application {
   id          String   @id @default(uuid())
+
+  subject     String   @default("None")
+  sender      String   @default("None")
   companyName String
   role        String
   status      String
