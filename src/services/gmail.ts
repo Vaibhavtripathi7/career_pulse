@@ -1,5 +1,6 @@
 import {google} from 'googleapis'
 import 'dotenv/config';
+import prisma from '../db.js';
 
 const oauth2Client = new google.auth.OAuth2(
     process.env.CLIENT_ID as string,
@@ -13,33 +14,46 @@ oauth2Client.setCredentials({
 const gmail = google.gmail({version: 'v1', auth: oauth2Client})
 
 async function fetchemails(){
-    let mail = await gmail.users.messages.list({userId: 'me', maxResults: 1, q: "subject:application"})
+    let mail = await gmail.users.messages.list({userId: 'me', maxResults: 10, q: "subject:application"})
     const message = mail.data.messages;
     if (!message || message.length === 0) {
         console.log("no new emails")
         return;
     }
-    const firstmail = message[0]
-    if (!firstmail || !firstmail.id ) {
-        console.log("email exists")
-        return ;
+
+    const mail_application = [];
+
+    for (const msg of message) {
+        if (!msg.id) continue;
+
+        let main_content = await gmail.users.messages.get({userId: 'me' ,id: msg.id});
+        let list_of_objects = main_content.data.payload?.headers;
+
+        const subject_value = list_of_objects?.find(header => header.name === 'Subject')?.value;
+        const formValue = list_of_objects?.find(headers => headers.name === 'From')?.value;    
+
+        const extractData = {
+            subject: subject_value as string,
+            sender: formValue as string,
+            companyName: "hello",
+            role: "sde",
+            status: "de",
+            workModel: ""
+        };
+
+        if (subject_value && formValue) {
+            mail_application.push(extractData);
+        }
     }
 
-    let main_content = await gmail.users.messages.get({userId: 'me', id: firstmail.id})
-    
-    let list_of_objects = main_content.data.payload?.headers;
-    
-    const subject_value = list_of_objects?.find(header => header.name === 'Subject')?.value;
-    const formValue = list_of_objects?.find(headers => headers.name === 'From')?.value;    
-
-    const extractData = {
-        subject: subject_value,
-        sender: formValue
-    };
-
-    console.log("Extracted", extractData);
-    return extractData;
+    if (mail_application.length > 0){
+        await prisma.application.createMany({
+            data: mail_application
+        });
+    }    
+    return mail_application;
     
 }   
+
 
 export default fetchemails;
