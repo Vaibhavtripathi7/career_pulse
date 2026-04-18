@@ -13,7 +13,7 @@ oauth2Client.setCredentials({
 const gmail = google.gmail({version: 'v1', auth: oauth2Client})
 
 async function fetchemails(){
-    let mail = await gmail.users.messages.list({userId: 'me', maxResults: 1})
+    let mail = await gmail.users.messages.list({userId: 'me', maxResults: 1, q: "subject:application"})
     const message = mail.data.messages;
     if (!message || message.length === 0) {
         console.log("no new emails")
@@ -26,7 +26,20 @@ async function fetchemails(){
     }
 
     let main_content = await gmail.users.messages.get({userId: 'me', id: firstmail.id})
-    return main_content.data.snippet;
+    
+    let list_of_objects = main_content.data.payload?.headers;
+    
+    const subject_value = list_of_objects?.find(header => header.name === 'Subject')?.value;
+    const formValue = list_of_objects?.find(headers => headers.name === 'From')?.value;    
+
+    const extractData = {
+        subject: subject_value,
+        sender: formValue
+    };
+
+    console.log("Extracted", extractData);
+    return extractData;
+    
 }   
 
 export default fetchemails;
