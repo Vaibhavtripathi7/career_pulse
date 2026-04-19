@@ -1,4 +1,4 @@
-import type { ApiResponse, Application } from "../types";
+import type{ ApiResponse, Application } from "../types";
 
 const API_BASE_URL = 'https://localhost:3000/api';
 
