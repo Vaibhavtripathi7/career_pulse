@@ -33,7 +33,6 @@ async function fetchemails(){
         const subject_value = list_of_objects?.find(header => header.name === 'Subject')?.value;
         const formValue = list_of_objects?.find(headers => headers.name === 'From')?.value;    
 
-        const cleandata_company = extractCleanData(formValue as string);
         const clean_role = extractRole(subject_value as string);
         const cleanmodel = exractWorkmodel(subject_value as string);
 
@@ -47,7 +46,7 @@ async function fetchemails(){
                 status: "Applied",
                 workModel: cleanmodel as string
             };
-            mail_application.push(extractData);
+            mail_application.push(extractData); 
         }
     }
 
