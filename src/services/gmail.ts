@@ -1,6 +1,7 @@
 import {google} from 'googleapis'
 import 'dotenv/config';
 import prisma from '../db.js';
+import extractCleanData, { extractRole, exractWorkmodel} from '../utils/extractor.js';
 
 const oauth2Client = new google.auth.OAuth2(
     process.env.CLIENT_ID as string,
@@ -32,16 +33,28 @@ async function fetchemails(){
         const subject_value = list_of_objects?.find(header => header.name === 'Subject')?.value;
         const formValue = list_of_objects?.find(headers => headers.name === 'From')?.value;    
 
+        const cleandata_company = extractCleanData(formValue as string);
+        const clean_role = extractRole(subject_value as string);
+        const cleanmodel = exractWorkmodel(subject_value as string);
         const extractData = {
             subject: subject_value as string,
             sender: formValue as string,
-            companyName: "hello",
-            role: "sde",
-            status: "de",
-            workModel: ""
+            companyName: cleandata_company as string,
+            role: clean_role,
+            status: "Applied",
+            workModel: cleanmodel
         };
 
         if (subject_value && formValue) {
+            const cleandata_company = extractCleanData(formValue as string);
+            const extractData = {
+                subject: subject_value as string,
+                sender: formValue as string,
+                companyName: cleandata_company as string,
+                role: "sde",
+                status: "de",
+                workModel: ""
+            };
             mail_application.push(extractData);
         }
     }
