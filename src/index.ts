@@ -3,10 +3,13 @@ import router from './routes/health.js';
 // import router_hook from "./routes/webhook.js";
 import router_for_mail from "./routes/sync.js";
 import router_db from "./routes/application.js";
+import cors from 'cors';
+
 
 const app = express();
 const PORT = 3000;
 
+app.use(cors());
 app.use(express.json());
 app.use('/api/health', router)
 // app.use('/api/webhook', router_hook);
