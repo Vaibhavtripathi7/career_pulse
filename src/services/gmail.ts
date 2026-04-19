@@ -36,14 +36,6 @@ async function fetchemails(){
         const cleandata_company = extractCleanData(formValue as string);
         const clean_role = extractRole(subject_value as string);
         const cleanmodel = exractWorkmodel(subject_value as string);
-        const extractData = {
-            subject: subject_value as string,
-            sender: formValue as string,
-            companyName: cleandata_company as string,
-            role: clean_role,
-            status: "Applied",
-            workModel: cleanmodel
-        };
 
         if (subject_value && formValue) {
             const cleandata_company = extractCleanData(formValue as string);
@@ -51,9 +43,9 @@ async function fetchemails(){
                 subject: subject_value as string,
                 sender: formValue as string,
                 companyName: cleandata_company as string,
-                role: "sde",
-                status: "de",
-                workModel: ""
+                role: clean_role as string,
+                status: "Applied",
+                workModel: cleanmodel as string
             };
             mail_application.push(extractData);
         }
