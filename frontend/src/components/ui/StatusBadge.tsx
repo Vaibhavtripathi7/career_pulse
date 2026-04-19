@@ -1,6 +1,5 @@
 export default function StatusBadge({ status }: { status: string }) {
     
-    // Modern Dark Theme Colors: Opacity backgrounds with crisp text and borders
     const colorMap: Record<string, string> = {
         "Applied": "bg-blue-500/10 text-blue-400 border border-blue-500/20",
         "Interviewing": "bg-purple-500/10 text-purple-400 border border-purple-500/20",

@@ -3,7 +3,6 @@ import StatusBadge from '../ui/StatusBadge';
 
 export default function ApplicationCard({ application }: { application: Application }) {
     return (
-        // Premium Dark Card: Deep gray background, subtle border, and a hover lift effect
         <div className="bg-gray-900 p-6 rounded-2xl border border-gray-800 flex flex-col items-start gap-4 transition-all duration-200 hover:-translate-y-1 hover:border-gray-700 hover:shadow-lg hover:shadow-black/50">
             
             <div className="w-full flex justify-between items-start">
@@ -16,7 +15,6 @@ export default function ApplicationCard({ application }: { application: Applicat
                     </p>
                 </div>
                 
-                {/* Moved the badge to the top right corner for a cleaner layout */}
                 <StatusBadge status={application.status} />
             </div>
 
@@ -25,7 +23,6 @@ export default function ApplicationCard({ application }: { application: Applicat
                     Applied: {new Date(application.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric'})}
                 </span>
                 <button className="text-xs font-semibold text-gray-400 hover:text-white transition-colors">
-                    View Details →
                 </button>
             </div>
             
