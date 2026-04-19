@@ -12,7 +12,6 @@ export default function App() {
   };
 
   return (
-    // 1. Changed background to deep gray-950, centered the content, and made text white
     <div className="bg-gray-950 min-h-screen p-10 flex flex-col items-center pt-20 font-sans text-white">
       
       <div className="w-full max-w-2xl">
@@ -20,7 +19,6 @@ export default function App() {
           Career<span className="text-blue-500">Pulse</span>
         </h1>
         
-        {/* We will eventually map over the real data here! */}
         <div className="grid gap-4">
             <ApplicationCard application={dummyApp} />
         </div>
