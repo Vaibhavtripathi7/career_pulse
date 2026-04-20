@@ -11,15 +11,32 @@ datasource db {
   provider = "postgresql"
 }
 
-model Application {
-  id          String   @id @default(uuid())
+// User model - 
 
-  subject     String   @default("None")
-  sender      String   @default("None")
+model User {
+  id    String  @id @default(uuid())
+  email String  @unique
+  name  String?
+
+  application Application[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Application {
+  id String @id @default(uuid())
+
+  subject     String @default("None")
+  sender      String @default("None")
   companyName String
   role        String
   status      String
   workModel   String
+
+  userID String?
+  user   User?   @relation(fields: [userID], references: [id], onDelete: Cascade)
+
   dateApplied DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
