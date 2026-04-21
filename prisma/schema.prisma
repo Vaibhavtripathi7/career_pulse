@@ -18,6 +18,10 @@ model User {
   email String  @unique
   name  String?
 
+  googleId     String? @unique
+  accessToken  String? @db.Text
+  refreshToken String? @db.Text
+
   application Application[]
 
   createdAt DateTime @default(now())
