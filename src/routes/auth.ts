@@ -14,7 +14,8 @@ const scopes = [
 authrouter.get('/google', (req: Request, res: Response)=> {
     const url = oauth2client.generateAuthUrl({
     access_type: 'offline',
-    scope: scopes
+    scope: scopes,
+    prompt: 'consent'
     });
     res.redirect(url);
 });
