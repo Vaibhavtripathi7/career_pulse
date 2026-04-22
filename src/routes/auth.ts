@@ -4,6 +4,8 @@ import prisma from '../db.js';
 import oauth2client from '../utils/googleclient.js';
 import { google } from 'googleapis';
 const  authrouter = Router();
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 
 const scopes = [
     "https://www.googleapis.com/auth/userinfo.email",
@@ -54,12 +56,26 @@ authrouter.get('/google/callback', async (req: Request, res:Response)=> {
                 refreshToken: tokens.refresh_token ?? null 
             } 
         });
-    
-
         console.log("success", tokens);
-        res.send("Authentication successful!")
+        const payload = {
+            userId: user.id };
         
-    } catch (error) {
+        const token = jwt.sign(
+            payload,
+            process.env.JWT_SECRET as string,
+            { expiresIn: '7d'}
+        );
+
+        res.cookie('careerpulse_auth', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            maxAge: 7*24*60*60*1000
+        });
+        res.redirect(process.env.FRONTEND_URL as string)
+    }
+        
+    catch (error) {
         console.error("Failed to get tokens", error);
         res.status(500).send("authentication error");
         
