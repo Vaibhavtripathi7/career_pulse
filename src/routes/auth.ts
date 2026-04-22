@@ -6,6 +6,7 @@ import { google } from 'googleapis';
 const  authrouter = Router();
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import requiresauth from '../middlewares/auth.js';
 
 const scopes = [
     "https://www.googleapis.com/auth/userinfo.email",
@@ -81,6 +82,30 @@ authrouter.get('/google/callback', async (req: Request, res:Response)=> {
         
     }
 });
+
+authrouter.get('/me', requiresauth, async (req: Request, res: Response) => {
+    try {
+        const id = (req as any).userId;
+
+        const user = await prisma.user.findUnique({
+            where: {
+                id: id
+            },
+            select: {
+                id: true,
+                name: true,
+                email: true
+            }
+        });
+        if(!user){
+            return res.status(404).json({ error: "User not found"});
+
+        }
+        res.json(user);
+    } catch (error) {
+        res.status(500).json({error: "server error"})
+    }
+})
 
 export default authrouter;
 

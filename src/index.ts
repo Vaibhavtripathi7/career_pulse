@@ -5,10 +5,12 @@ import router_for_mail from "./routes/sync.js";
 import router_db from "./routes/application.js";
 import cors from 'cors';
 import authrouter from "./routes/auth.js";
+import cookieParser from "cookie-parser";
 
 const app = express();
 const PORT = 3000;
 
+app.use(cookieParser());
 app.use(cors());
 app.use(express.json());
 app.use('/api/health', router)
