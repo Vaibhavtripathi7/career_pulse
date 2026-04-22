@@ -30,7 +30,6 @@ async function fetchemails(userId: string){
     let mail = await gmail.users.messages.list({userId: 'me', maxResults: 10, q: "subject:application"})
     const message = mail.data.messages;
     if (!message || message.length === 0) {
-        console.log("no new emails")
         return [];
     } 
 
