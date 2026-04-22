@@ -3,24 +3,36 @@ import 'dotenv/config';
 import prisma from '../db.js';
 import extractCleanData, { extractRole, exractWorkmodel} from '../utils/extractor.js';
 
-const oauth2Client = new google.auth.OAuth2(
-    process.env.CLIENT_ID as string,
-    process.env.CLIENT_SECRET as string,
-);
-oauth2Client.setCredentials({
-    refresh_token: process.env.GMAIL_REFRESH_TOKEN as string
-});
 
+async function fetchemails(userId: string){
 
-const gmail = google.gmail({version: 'v1', auth: oauth2Client})
+    const user = await prisma.user.findUnique({
 
-async function fetchemails(){
+        where: {id: userId},
+        select: { refreshToken: true, accessToken: true}
+    });
+
+    if (!user || !user.refreshToken) {
+        throw new Error("USer not found");
+    }
+
+    const oauth2client = new google.auth.OAuth2(
+        process.env.CLIENT_ID as string,
+        process.env.CLIENT_SECRET as string
+
+    )
+    oauth2client.setCredentials({
+        refresh_token: user.refreshToken,
+        access_token: user.accessToken
+    });
+    const gmail = google.gmail({ version: 'v1', auth: oauth2client});
+
     let mail = await gmail.users.messages.list({userId: 'me', maxResults: 10, q: "subject:application"})
     const message = mail.data.messages;
     if (!message || message.length === 0) {
         console.log("no new emails")
-        return;
-    }
+        return [];
+    } 
 
     const mail_application = [];
 
@@ -44,7 +56,8 @@ async function fetchemails(){
                 companyName: cleandata_company as string,
                 role: clean_role as string,
                 status: "Applied",
-                workModel: cleanmodel as string
+                workModel: cleanmodel as string,
+                userID: userId
             };
             mail_application.push(extractData); 
         }
@@ -52,7 +65,8 @@ async function fetchemails(){
 
     if (mail_application.length > 0){
         await prisma.application.createMany({
-            data: mail_application
+            data: mail_application,
+            skipDuplicates: true 
         });
     }    
     return mail_application;
