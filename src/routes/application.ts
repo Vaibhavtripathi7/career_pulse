@@ -1,12 +1,19 @@
 import { Router } from "express";
 import type { Request, Response } from "express";
 import prisma from "../db.js";
+import requiresauth from "../middlewares/auth.js";
 
 const router_db = Router();
 
-router_db.get('/', async (req:Request, res: Response) => {
+router_db.get('/',requiresauth, async (req:Request, res: Response) => {
     try {
+        const id = (req as any).userId;
+
         const applications = await prisma.application.findMany({
+
+            where: {
+                userID: id
+            },
             orderBy: {
                 updatedAt: 'desc'
             }
