@@ -31,7 +31,7 @@ export async function getApplication(): Promise<Application[]> {
     try {
         const response = await api.get<ApiResponse>('/applications');
 
-        if (!response.data.success){
+        if (response.data.success){
             return response.data.data;
         }
         else {
