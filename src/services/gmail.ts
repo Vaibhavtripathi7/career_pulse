@@ -51,6 +51,7 @@ async function fetchemails(userId: string){
             const cleandata_company = extractCleanData(formValue as string);
             const extractData = {
                 subject: subject_value as string,
+                messageId: msg.id, 
                 sender: formValue as string,
                 companyName: cleandata_company as string,
                 role: clean_role as string,
