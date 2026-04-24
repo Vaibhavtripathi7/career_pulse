@@ -1,10 +1,11 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import type { EmailInput, ParsedEmail } from "../types/email.types.js";
-
+import dotenv from 'dotenv';
+dotenv.config();
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
 const model = genAI.getGenerativeModel({
-  model: "gemini-2.5-flash-latest"
+  model: "gemini-2.5-flash"
 });
 
 function extractJSON(text: string): string {
