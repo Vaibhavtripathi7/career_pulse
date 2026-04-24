@@ -1,4 +1,4 @@
-import type{ ApiResponse, Application } from "../types";
+import type{ ApiResponse, Application, SingleApplicationResponse } from "../types";
 import axios from 'axios';
 
 const api = axios.create({
@@ -16,7 +16,7 @@ api.interceptors.response.use(
     (response) => response,
     (error) => {
 
-        if (error.response && error.respone.status === 401) {
+        if (error.response && error.response.status === 401) {
 
             console.warn("Unauthorized! cookie is mising")
 
@@ -53,5 +53,32 @@ export async function getUseProfile(){
         return null;
     }
 }
+
+export async function createApplication(newApp:Partial<Application>): Promise<Application>
+ 
+{
+    const response = await api.post<SingleApplicationResponse>("/applications", newApp); 
+    if(response.data.success){
+        return response.data.data;
+    } else {
+        throw new Error("failed to create application");
+    }
+
+}
+
+export async function updateApplicationStatus(
+  id: string,
+  status: string
+): Promise<void> {
+  const response = await api.patch<SingleApplicationResponse>(
+    `/applications/${id}`,
+    { status }
+  );
+
+  if (!response.data.success) {
+    throw new Error("Failed to update status");
+  }
+}
+
 
 export default api ;
