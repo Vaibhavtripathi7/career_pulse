@@ -32,47 +32,57 @@ async function fetchemails(userId: string){
         return [];
     } 
 
-    const mail_application = [];
+    const mail_application = await Promise.all(
+        message.map(async(msg) => {
+            if (!msg.id) return null;
+            const main_content = await gmail.users.messages.get({userId: 'me' ,id: msg.id});
+            const list_of_objects = main_content.data.payload?.headers;
 
-    for (const msg of message) {
-        if (!msg.id) continue;
+            const subject_value = list_of_objects?.find(header => header.name === 'Subject')?.value;
+            const formValue = list_of_objects?.find(headers => headers.name === 'From')?.value;    
 
-        let main_content = await gmail.users.messages.get({userId: 'me' ,id: msg.id});
-        let list_of_objects = main_content.data.payload?.headers;
+            if (!subject_value || !formValue) return null;
 
-        const subject_value = list_of_objects?.find(header => header.name === 'Subject')?.value;
-        const formValue = list_of_objects?.find(headers => headers.name === 'From')?.value;    
-
-        const parsed = await emailPipeline({
-            subject: subject_value as string,
-            sender: formValue as string
-        });
-        if (subject_value && formValue) {
-            const extractData = {
+            const parsed = await emailPipeline({
                 subject: subject_value as string,
-                messageId: msg.id, 
+                sender: formValue as string
+            });
+
+
+            const rawDate = main_content.data.internalDate;
+            const headerDate = list_of_objects?.find(h=> h.name === 'Date')?.value;
+        
+            const finalDate = headerDate
+                ? new Date(headerDate)
+                : rawDate
+                  ? new Date(Number(rawDate))
+                  : null;
+        
+            return {
+
+                subject: subject_value,
+                messageId: msg.id,
                 sender: formValue as string,
 
                 companyName: parsed.companyName as string,
                 role: parsed.role as string,
-                
-                status: "Applied",
                 workModel: parsed.workModel as string,
-                userID: userId
-            };
-            mail_application.push(extractData); 
-        }
-    }
+                status: "Applied",
+                userID: userId,
+                date: finalDate };
 
-    if (mail_application.length > 0){
+        })
+    )
+    const filtered = mail_application.filter(
+        (item): item is NonNullable<typeof item> => item !== null
+    );
+
+    if (filtered.length > 0) {
         await prisma.application.createMany({
-            data: mail_application,
-            skipDuplicates: true 
-        });
-    }    
-    return mail_application;
-    
-}   
-
-
+            data: filtered,
+            skipDuplicates: true
+        })
+    return filtered;
+    }
+} 
 export default fetchemails;
