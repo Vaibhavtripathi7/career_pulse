@@ -12,3 +12,8 @@ export interface ApiResponse {
     count: number;
     data: Application[];
 }
+
+export interface SingleApplicationResponse {
+    success: boolean;
+    data: Application;
+}
