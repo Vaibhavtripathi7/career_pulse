@@ -1,8 +1,7 @@
 import {google} from 'googleapis'
 import 'dotenv/config';
 import prisma from '../db.js';
-import extractCleanData, { extractRole, exractWorkmodel} from '../utils/extractor.js';
-
+import { emailPipeline } from '../pipeline/email.pipeline.js';
 
 async function fetchemails(userId: string){
 
@@ -44,19 +43,21 @@ async function fetchemails(userId: string){
         const subject_value = list_of_objects?.find(header => header.name === 'Subject')?.value;
         const formValue = list_of_objects?.find(headers => headers.name === 'From')?.value;    
 
-        const clean_role = extractRole(subject_value as string);
-        const cleanmodel = exractWorkmodel(subject_value as string);
-
+        const parsed = await emailPipeline({
+            subject: subject_value as string,
+            sender: formValue as string
+        });
         if (subject_value && formValue) {
-            const cleandata_company = extractCleanData(formValue as string);
             const extractData = {
                 subject: subject_value as string,
                 messageId: msg.id, 
                 sender: formValue as string,
-                companyName: cleandata_company as string,
-                role: clean_role as string,
+
+                companyName: parsed.companyName as string,
+                role: parsed.role as string,
+                
                 status: "Applied",
-                workModel: cleanmodel as string,
+                workModel: parsed.workModel as string,
                 userID: userId
             };
             mail_application.push(extractData); 
