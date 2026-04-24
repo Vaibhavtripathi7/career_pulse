@@ -1,4 +1,3 @@
-// src/parsers/company.parser.ts
 
 const GENERIC_PREFIXES = [
   "careers",
@@ -33,19 +32,16 @@ export function extractCompany(sender: string): string {
 
   const normalized = sender.trim();
 
-  // ✅ Case 1: "Microsoft Careers <careers@microsoft.com>"
   const nameMatch = normalized.match(/^(.+?)\s*<.+?>$/);
   if (nameMatch?.[1]) {
     return cleanCompanyName(nameMatch[1]);
   }
 
-  // ✅ Case 2: "careers@microsoft.com"
   const emailMatch = normalized.match(/@([a-zA-Z0-9-]+)\./);
   if (emailMatch?.[1]) {
     return normalizeName(emailMatch[1]);
   }
 
-  // ✅ Case 3: fallback plain text
   if (normalized.length > 2) {
     return normalizeName(normalized);
   }
