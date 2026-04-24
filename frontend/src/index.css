@@ -1,13 +1,3 @@
-/* ============================================================
-   CAREERPULSE — GLOBAL DESIGN SYSTEM
-   CHANGED: Full replacement of minimal 3-line file with:
-   - Design tokens (CSS custom properties)
-   - Custom scrollbar
-   - Noise texture overlay
-   - Keyframe animation library
-   - Utility classes for glass, glow, skeleton, etc.
-   ============================================================ */
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
