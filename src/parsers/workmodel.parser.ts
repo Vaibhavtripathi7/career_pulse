@@ -16,7 +16,7 @@ export function extractWorkModel(subject: string): string {
 
   for (const key in WORK_MODEL_MAP) {
     if (lower.includes(key)) {
-      return WORK_MODEL_MAP[key];
+      return WORK_MODEL_MAP[key]!;
     }
   }
 
