@@ -2,8 +2,11 @@ import {google} from 'googleapis'
 import 'dotenv/config';
 import prisma from '../db.js';
 import { emailPipeline } from '../pipeline/email.pipeline.js';
+import pLimit from 'p-limit';
+import type { Application } from '@prisma/client';
 
-async function fetchemails(userId: string): Promise<any[]>{
+const limit = pLimit(2);
+async function fetchemails(userId: string): Promise<Application[]>{
 
     const user = await prisma.user.findUnique({
 
@@ -33,46 +36,53 @@ async function fetchemails(userId: string): Promise<any[]>{
     } 
 
     const mail_application = await Promise.all(
-        message.map(async(msg) => {
-            if (!msg.id) return null;
-            const main_content = await gmail.users.messages.get({userId: 'me' ,id: msg.id});
-            const list_of_objects = main_content.data.payload?.headers;
+        message.map((msg) =>
+            limit(async () =>  {
+                try {
+                    if (!msg.id) return null;
+                    const main_content = await gmail.users.messages.get({userId: 'me' ,id: msg.id});
+                    const list_of_objects = main_content.data.payload?.headers;
 
-            const subject_value = list_of_objects?.find(header => header.name === 'Subject')?.value;
-            const formValue = list_of_objects?.find(headers => headers.name === 'From')?.value;    
+                    const subject_value = list_of_objects?.find(header => header.name === 'Subject')?.value;
+                    const formValue = list_of_objects?.find(headers => headers.name === 'From')?.value;    
 
-            if (!subject_value || !formValue) return null;
+                    if (!subject_value || !formValue) return null;
 
-            const parsed = await emailPipeline({
-                subject: subject_value as string,
-                sender: formValue as string
-            });
+                    const parsed = await emailPipeline({
+                        subject: subject_value as string,
+                        sender: formValue as string
+                        });
 
 
-            const rawDate = main_content.data.internalDate;
-            const headerDate = list_of_objects?.find(h=> h.name === 'Date')?.value;
+                    const rawDate = main_content.data.internalDate;
+                    const headerDate = list_of_objects?.find(h=> h.name === 'Date')?.value;
         
-            const finalDate = headerDate
-                ? new Date(headerDate)
-                : rawDate
-                  ? new Date(Number(rawDate))
-                  : null;
+                    const finalDate = headerDate
+                        ? new Date(headerDate)
+                        : rawDate
+                        ? new Date(Number(rawDate))
+                        : null;
         
-            return {
+                    return {
 
-                subject: subject_value,
-                messageId: msg.id,
-                sender: formValue as string,
+                        subject: subject_value,
+                        messageId: msg.id,
+                        sender: formValue as string,
 
-                companyName: parsed.companyName as string,
-                role: parsed.role as string,
-                workModel: parsed.workModel as string,
-                status: "Applied",
-                userID: userId,
-                dateApplied: finalDate ?? new Date() }; 
-
-        })
-    )
+                        companyName: parsed.companyName as string,
+                        role: parsed.role as string,
+                        workModel: parsed.workModel as string,
+                        status: "Applied",
+                        userID: userId,
+                        dateApplied: finalDate ?? new Date() 
+                    };
+                } catch (error) {
+                    console.error("email processing failed:", msg.id, error);
+                    return null;
+                }
+            })
+        )
+    );
     const filtered = mail_application.filter(
         (item): item is NonNullable<typeof item> => item !== null
     );
@@ -81,8 +91,8 @@ async function fetchemails(userId: string): Promise<any[]>{
         await prisma.application.createMany({
             data: filtered,
             skipDuplicates: true
-        })}
+        });
+    }
     return filtered; 
-
 } 
 export default fetchemails;
