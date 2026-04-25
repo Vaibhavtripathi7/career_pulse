@@ -3,10 +3,10 @@ import 'dotenv/config';
 import prisma from '../db.js';
 import { emailPipeline } from '../pipeline/email.pipeline.js';
 import pLimit from 'p-limit';
-import type { Application } from '@prisma/client';
+import type { Application, Prisma } from '@prisma/client';
 
 const limit = pLimit(2);
-async function fetchemails(userId: string): Promise<Application[]>{
+async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateManyInput[]>{
 
     const user = await prisma.user.findUnique({
 
