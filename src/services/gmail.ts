@@ -4,10 +4,13 @@ import prisma from '../db.js';
 import { emailPipeline } from '../pipeline/email.pipeline.js';
 import pLimit from 'p-limit';
 import type { Application, Prisma } from '@prisma/client';
+import { logger } from "../utils/logger.js";
+import { increment } from '../utils/metrices.js';
 
 const limit = pLimit(2);
 async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateManyInput[]>{
 
+    logger.info({userId}, "Fetching emails");
     const user = await prisma.user.findUnique({
 
         where: {id: userId},
@@ -38,6 +41,8 @@ async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateMany
     const mail_application = await Promise.all(
         message.map((msg) =>
             limit(async () =>  {
+                increment("totalEmails")
+
                 try {
                     if (!msg.id) return null;
                     const main_content = await gmail.users.messages.get({userId: 'me' ,id: msg.id});
@@ -62,7 +67,8 @@ async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateMany
                         : rawDate
                         ? new Date(Number(rawDate))
                         : null;
-        
+                    
+                    increment("success");
                     return {
 
                         subject: subject_value,
@@ -77,7 +83,8 @@ async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateMany
                         dateApplied: finalDate ?? new Date() 
                     };
                 } catch (error) {
-                    console.error("email processing failed:", msg.id, error);
+                    increment("failed");
+                    logger.error({ msgId: msg.id, error},"email processing failed:");
                     return null;
                 }
             })
@@ -93,6 +100,7 @@ async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateMany
             skipDuplicates: true
         });
     }
+    logger.info({count: filtered.length}, "Email processed");
     return filtered; 
 } 
 export default fetchemails;
