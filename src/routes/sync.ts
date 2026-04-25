@@ -8,9 +8,9 @@ const router_for_mail = Router();
 router_for_mail.post('/', requiresauth,  async (req: Request, res: Response) => {
     try {
         const id = (req as any).userId;
-        let results = await fetchemails(id);
+        const results = await fetchemails(id);
         res.json({success: true, snippet: results,
-            count: results.length
+            count: results.length 
         });
 
     } catch (error) {

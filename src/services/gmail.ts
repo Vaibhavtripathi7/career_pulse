@@ -3,7 +3,7 @@ import 'dotenv/config';
 import prisma from '../db.js';
 import { emailPipeline } from '../pipeline/email.pipeline.js';
 
-async function fetchemails(userId: string){
+async function fetchemails(userId: string): Promise<any[]>{
 
     const user = await prisma.user.findUnique({
 
@@ -69,7 +69,7 @@ async function fetchemails(userId: string){
                 workModel: parsed.workModel as string,
                 status: "Applied",
                 userID: userId,
-                date: finalDate };
+                dateApplied: finalDate ?? new Date() }; 
 
         })
     )
@@ -81,8 +81,8 @@ async function fetchemails(userId: string){
         await prisma.application.createMany({
             data: filtered,
             skipDuplicates: true
-        })
-    return filtered;
-    }
+        })}
+    return filtered; 
+
 } 
 export default fetchemails;
