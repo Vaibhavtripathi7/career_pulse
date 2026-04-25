@@ -1,6 +1,8 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import type { EmailInput, ParsedEmail } from "../types/email.types.js";
 import dotenv from 'dotenv';
+import { logger } from "../utils/logger.js";
+import { increment } from "../utils/metrices.js";
 dotenv.config();
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
@@ -24,9 +26,13 @@ async function retry<T>(fn: () => Promise<T>, retries = 3): Promise<T> {
   } catch (error) {
     if (retries === 0) throw error;
 
-    console.warn(` Retry... remaining: ${retries}`);
-    await new Promise(res => setTimeout(res, 1000));
+    if (error instanceof Error && error.message.includes("Quota")) {
+      logger.warn("Quota hit, waiting 50s... ");
+      await new Promise(res => setTimeout(res, 50000));
 
+    } else {
+      await new Promise(res => setTimeout(res, 1000));
+    }
     return retry(fn, retries - 1);
   }
 }
@@ -51,11 +57,12 @@ const cache = new Map<string, ParsedEmail>();
 
 
 export async function parseWithGemini(input: EmailInput): Promise<ParsedEmail> {
-    const key = `${input.subject}-${input.sender}`;
+    const key = JSON.stringify(input);
     if(cache.has(key)) {
-        console.log("cache hit");
+        logger.info("cache hit");
         return cache.get(key)!;
     }    
+    increment("llmCalls");
     
     const prompt = `
     You are a strict JSON generator.
@@ -76,9 +83,13 @@ export async function parseWithGemini(input: EmailInput): Promise<ParsedEmail> {
     try {
         const result = await retry(() => withTimeout(model.generateContent(prompt),5000));
         const text = result.response.text();
-        console.log("\n RAW GEMINI RESPONSE:\n", text);
-        const parsed = JSON.parse(extractJSON(text));
-
+        logger.info("\n RAW GEMINI RESPONSE:\n");
+        let parsed;
+        try {
+          parsed = JSON.parse(extractJSON(text));
+        } catch (error) {
+          throw new Error("Invalid JSON from gemini");
+        }
         const finalResult: ParsedEmail = {
             companyName: parsed.companyName || "",
             role: parsed.role || "",
@@ -88,13 +99,14 @@ export async function parseWithGemini(input: EmailInput): Promise<ParsedEmail> {
         cache.set(key, finalResult);
         return finalResult;
 
-
-    } catch (error) {
-            console.error(" Gemini parsing failed:", error);
-            return {
-                companyName: "",
-                role: "",
-                workModel: "Unknown"};
+    } catch (error: unknown) {
+        increment("llmFailures");
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        logger.error({error: errorMessage }," Gemini parsing failed:");
+        return {
+            companyName: "",
+            role: "",
+            workModel: "Unknown"};
     }
 }
 
