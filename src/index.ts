@@ -5,6 +5,7 @@ import router_db from "./routes/application.js";
 import cors from 'cors';
 import authrouter from "./routes/auth.js";
 import cookieParser from "cookie-parser";
+import metrices_router from "./routes/metrics.js";
 
 const app = express();
 const PORT = 3000;
@@ -15,6 +16,7 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(cookieParser());
+app.use("/metrics", metrices_router)
 app.use('/api/health', router)
 app.use('/api/sync', router_for_mail);
 app.use('/api/applications', router_db)
