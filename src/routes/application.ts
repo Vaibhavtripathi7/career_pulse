@@ -2,6 +2,8 @@ import { Router } from "express";
 import type { Request, Response } from "express";
 import prisma from "../db.js";
 import requiresauth from "../middlewares/auth.js";
+import { string, success } from "zod";
+import { error } from "node:console";
 
 const router_db = Router();
 
@@ -68,5 +70,33 @@ router_db.post('/', requiresauth, async (req: Request, res: Response) => {
   }
 });
 
+router_db.patch('/:id', requiresauth, async (req: Request, res: Response) => {
+
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    if (!id || typeof id !== 'string') {
+      return res.status(400).json({ success: false, error: "Invalid ID format"});
+    }
+    const updated = await prisma.application.update({
+      where: { id },
+      data: {status} 
+    });
+
+    res.json({
+      success: true,
+      data: updated
+    });
+
+  } catch (error) {
+    
+    console.error("Update failed", error);
+    res.status(500).json({
+      success: false,
+      error: "failed to update!"
+    })
+  }
+})
 
 export default router_db;
