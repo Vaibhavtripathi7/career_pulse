@@ -62,8 +62,10 @@ export default function ApplicationCard({
 
         <div className="flex justify-between items-center">
           <span className="text-xs text-gray-500">
-            Applied{" "}
-            {new Date(application.createdAt).toLocaleDateString("en-US", {
+            Applied on {" "}
+            {new Date (
+              (application as any).dateApplied || (application as any).createdAt || new Date().toISOString()
+            ).toLocaleDateString("en-US", {
               month: "short",
               day: "numeric",
             })}

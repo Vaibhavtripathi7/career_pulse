@@ -59,7 +59,8 @@ export default function Dashboard() {
     const map: Record<string, number> = {};
 
     applications.forEach(app => {
-      const date = new Date(app.createdAt).toLocaleDateString("en-US", {
+      const rawDate = (app as any).dateApplied || app.createdAt || new Date().toISOString();
+      const date = new Date(rawDate).toLocaleDateString("en-US", {
         month: "short",
         day: "numeric",
       });
