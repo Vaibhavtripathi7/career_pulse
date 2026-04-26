@@ -33,4 +33,40 @@ router_db.get('/',requiresauth, async (req:Request, res: Response) => {
     }
     
 });
+
+router_db.post('/', requiresauth, async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).userId;
+
+    const { subject, companyName, role, status, workModel } = req.body;
+
+    const newApp = await prisma.application.create({
+      data: {
+        subject: subject || "Manual Entry",
+        messageId: crypto.randomUUID(),
+        sender: "manual",
+        companyName,
+        role,
+        status: status || "Applied",
+        workModel: workModel || "Unknown",
+        userID: userId
+      }
+    });
+
+    res.json({
+      success: true,
+      data: newApp
+    });
+
+  } catch (error) {
+    console.error("Create application failed:", error);
+
+    res.status(500).json({
+      success: false,
+      error: "Failed to create application"
+    });
+  }
+});
+
+
 export default router_db;
