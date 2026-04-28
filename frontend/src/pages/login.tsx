@@ -1,10 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
+import taskTracker from '../assets/icon_-task-tracking.png';
+import autoSync from '../assets/auto_sync.png';
+import visualAnlysis from '../assets/graph_icon.png';
+import secure from '../assets/secure_icon.png';
 
 const FEATURES = [
-  { icon: '⚡', label: 'Auto-sync Gmail' },
-  { icon: '📊', label: 'Visual analytics' },
-  { icon: '🎯', label: 'Status tracking' },
-  { icon: '🔒', label: 'Secure & private' },
+  { icon: autoSync, label: 'Auto-sync Gmail' },
+  { icon: visualAnlysis, label: 'Visual analytics' },
+  { icon: taskTracker, label: 'Status tracking' },
+  { icon: secure, label: 'Secure & private' },
 ];
 
 const AMBIENT_STATS = [
@@ -261,20 +265,18 @@ export default function Login() {
                   background: 'rgba(255,255,255,0.04)',
                   border: '1px solid rgba(255,255,255,0.07)',
                   color: '#94a3b8',
+                  height: '32px'
                 }}
               >
-                <span>{f.icon}</span>
-                <span>{f.label}</span>
+                <img src={f.icon} alt="" className='w-4 h-4 object-contain opacity-80'
+                style={{display: 'block'}}
+                />
+                <span className='leading-none'>{f.label}</span>
               </div>
             ))}
           </div>
 
-          <p className="text-center text-xs text-slate-600 mt-6 leading-relaxed">
-            By continuing, you agree to our{' '}
-            <span className="text-slate-500 hover:text-slate-400 cursor-pointer transition-colors">Terms</span>
-            {' '}and{' '}
-            <span className="text-slate-500 hover:text-slate-400 cursor-pointer transition-colors">Privacy Policy</span>.
-          </p>
+
         </div>
       </div>
     </div>
