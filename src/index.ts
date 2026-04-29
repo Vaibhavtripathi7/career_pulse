@@ -6,6 +6,7 @@ import cors from 'cors';
 import authrouter from "./routes/auth.js";
 import cookieParser from "cookie-parser";
 import metrices_router from "./routes/metrics.js";
+import { emailCronService } from "./services/cron.js";
 
 const app = express();
 const PORT = 3000;
@@ -23,5 +24,6 @@ app.use('/api/applications', router_db)
 app.use('/api/auth', authrouter);
 
 app.listen(PORT, ()=>{
-    console.log("server is alive")
+    console.log("server is alive");
+    emailCronService.start();
 })
