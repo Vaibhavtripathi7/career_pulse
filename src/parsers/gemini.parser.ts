@@ -7,7 +7,7 @@ dotenv.config();
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
 const model = genAI.getGenerativeModel({
-  model: "gemini-2.5-flash"
+  model: "gemini-2.5-flash-lite"
 });
 
 function extractJSON(text: string): string {
@@ -21,20 +21,26 @@ function extractJSON(text: string): string {
 }
 
 async function retry<T>(fn: () => Promise<T>, retries = 3): Promise<T> {
+
+  for (let attempt = 1; attempt <= retries; attempt++){
   try {
     return await fn();
   } catch (error) {
-    if (retries === 0) throw error;
 
-    if (error instanceof Error && error.message.includes("Quota")) {
-      logger.warn("Quota hit, waiting 50s... ");
-      await new Promise(res => setTimeout(res, 50000));
+    const isQuota = error instanceof Error && error.message.includes("Quota")
+    const delay = isQuota
+      ? 10000 * attempt
+      : 1000 * attempt;
 
-    } else {
-      await new Promise(res => setTimeout(res, 1000));
+    logger.warn(`retry ${attempt} | waiting ${delay}ms`);
+
+    if (attempt === retries) throw error;
+
+    await new Promise(res => setTimeout(res, delay));
+
     }
-    return retry(fn, retries - 1);
   }
+  throw new Error("Retry failed");
 }
 
 function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
@@ -53,14 +59,38 @@ function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   });
 }
 
-const cache = new Map<string, ParsedEmail>();
+function isJobEmail(input: EmailInput): boolean{
+  const text = (input.subject + input.sender).toLowerCase();
 
+  return [
+    "applications",
+    "interview",
+    "job", 
+    "career",
+    "opportunity",
+    "position",
+    "hiring"  
+  ].some(keyword => text.includes(keyword));
+}
+
+
+const cache = new Map<string, {data: ParsedEmail; time: number}>();
+const CACHE_TTL = 10 * 60 * 1000;
 
 export async function parseWithGemini(input: EmailInput): Promise<ParsedEmail> {
+
+  if (!isJobEmail(input)){
+    return {
+      companyName: "",
+      role: "",
+      workModel: "Unkown"
+    };
+  }
     const key = JSON.stringify(input);
-    if(cache.has(key)) {
+    const cached = cache.get(key);
+    if(cached && Date.now() - cached.time < CACHE_TTL) {
         logger.info("cache hit");
-        return cache.get(key)!;
+        return cached.data;
     }    
     increment("llmCalls");
     
@@ -79,11 +109,12 @@ export async function parseWithGemini(input: EmailInput): Promise<ParsedEmail> {
 
     Subject: ${input.subject}
     Sender: ${input.sender}
+    Body: ${input.snippet}
     `;
     try {
-        const result = await retry(() => withTimeout(model.generateContent(prompt),5000));
+        const result = await retry(() => withTimeout(model.generateContent(prompt),15000));
         const text = result.response.text();
-        logger.info("\n RAW GEMINI RESPONSE:\n");
+        logger.info({text}, "\n RAW GEMINI RESPONSE:\n");
         let parsed;
         try {
           parsed = JSON.parse(extractJSON(text));
@@ -96,7 +127,7 @@ export async function parseWithGemini(input: EmailInput): Promise<ParsedEmail> {
             workModel: parsed.workModel || "Unknown"
             };
 
-        cache.set(key, finalResult);
+        cache.set(key, { data: finalResult, time: Date.now()});
         return finalResult;
 
     } catch (error: unknown) {

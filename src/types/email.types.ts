@@ -1,6 +1,7 @@
 export interface EmailInput {
     subject: string;
     sender: string;
+    snippet: string;
 }
 
 export interface ParsedEmail {

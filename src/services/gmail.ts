@@ -32,7 +32,7 @@ async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateMany
     });
     const gmail = google.gmail({ version: 'v1', auth: oauth2client});
 
-    let mail = await gmail.users.messages.list({userId: 'me', maxResults: 10, q: "subject:application"})
+    let mail = await gmail.users.messages.list({userId: 'me', maxResults: 10, q: "(application OR interview OR job OR hiring OR position) -newsletter"})
     const message = mail.data.messages;
     if (!message || message.length === 0) {
         return [];
@@ -50,12 +50,14 @@ async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateMany
 
                     const subject_value = list_of_objects?.find(header => header.name === 'Subject')?.value;
                     const formValue = list_of_objects?.find(headers => headers.name === 'From')?.value;    
-
+                    
+                    const snippet_value = main_content.data.snippet;
                     if (!subject_value || !formValue) return null;
 
                     const parsed = await emailPipeline({
                         subject: subject_value as string,
-                        sender: formValue as string
+                        sender: formValue as string,
+                        snippet: snippet_value as string
                         });
 
 
