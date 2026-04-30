@@ -109,6 +109,7 @@ export async function parseWithGemini(input: EmailInput): Promise<ParsedEmail> {
 
     Subject: ${input.subject}
     Sender: ${input.sender}
+    Body: ${input.snippet}
     `;
     try {
         const result = await retry(() => withTimeout(model.generateContent(prompt),15000));
