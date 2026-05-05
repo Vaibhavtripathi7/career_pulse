@@ -1,10 +1,12 @@
 import pino from "pino";
 
-const isProd = process.env.NODE_ENV === "production";
+const env = process.env.NODE_ENV;
 
-export const logger = isProd
+export const logger = 
+    env === "production"
     ? pino()
-
+    : env === "test"
+    ? pino({ level: "silent"})
     : pino({
 
     level: "info",
