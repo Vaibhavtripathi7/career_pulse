@@ -1,0 +1,23 @@
+name: Backend CI
+on: 
+    pull_request: 
+    push: 
+        branches: [master]
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        env: 
+            NODE_ENV: test
+        steps: 
+            - uses: actions/checkout@v3
+            - name: Use Node.js
+              uses: actions/setup-node@v4
+              with:
+                node-version: 20
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Run tests
+              run: npm test
