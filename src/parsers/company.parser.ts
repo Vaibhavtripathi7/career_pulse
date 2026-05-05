@@ -32,6 +32,19 @@ export function extractCompany(sender: string): string {
 
   const normalized = sender.trim();
 
+  const textPatterns = [
+    /applied to ([a-zA-Z]+)/i,
+    /application at ([a-zA-Z]+)/i,
+    /from ([a-zA-Z]+)/i,
+  ];
+
+  for (const pattern of textPatterns) {
+    const match = normalized.match(pattern);
+    if (match?.[1]) {
+      return normalizeName(match[1]);
+    }
+  }
+  
   const nameMatch = normalized.match(/^(.+?)\s*<.+?>$/);
   if (nameMatch?.[1]) {
     return cleanCompanyName(nameMatch[1]);
