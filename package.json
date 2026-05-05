@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "test": "vitest"
+    "test": "NODE_ENV=test vitest"
   },
   "keywords": [],
   "author": "",
