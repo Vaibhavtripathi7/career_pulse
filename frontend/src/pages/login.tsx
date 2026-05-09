@@ -11,12 +11,6 @@ const FEATURES = [
   { icon: secure, label: 'Secure & private' },
 ];
 
-const AMBIENT_STATS = [
-  { value: '2.4k', label: 'Jobs tracked', x: 'left-8',  y: 'top-32',  delay: 0 },
-  { value: '91%',  label: 'Response rate', x: 'right-8', y: 'top-48',  delay: 200 },
-  { value: '14d',  label: 'Avg time to offer', x: 'left-10', y: 'bottom-40', delay: 400 },
-];
-
 export default function Login() {
   const orbRef1  = useRef<HTMLDivElement>(null);
   const orbRef2  = useRef<HTMLDivElement>(null);
@@ -111,7 +105,7 @@ export default function Login() {
   const handleGoogleLogin = () => {
     setLoading(true);
     setTimeout(() => {
-      window.location.href = 'http://localhost:3000/api/auth/google';
+      window.location.href = `${import.meta.env.VITE_API_URL}/api/auth/google` || 'http://localhost:3000/api/auth/google';
     }, 300);
   };
 
