@@ -153,18 +153,6 @@ export default function Login() {
         />
       </div>
 
-      {AMBIENT_STATS.map((s) => (
-        <div
-          key={s.label}
-          className={`ambient-stat absolute ${s.x} ${s.y} hidden lg:block opacity-0`}
-          style={{ animationDelay: `${s.delay}ms` }}
-        >
-          <div className="glass rounded-xl px-4 py-3 text-center" style={{ minWidth: '120px' }}>
-            <div className="text-2xl font-bold text-white font-mono">{s.value}</div>
-            <div className="text-xs text-slate-400 mt-0.5">{s.label}</div>
-          </div>
-        </div>
-      ))}
 
       <div
         ref={cardRef}
