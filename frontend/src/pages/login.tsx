@@ -105,7 +105,7 @@ export default function Login() {
   const handleGoogleLogin = () => {
     setLoading(true);
     setTimeout(() => {
-      window.location.href = `${import.meta.env.VITE_API_URL}/api/auth/google` || 'http://localhost:3000/api/auth/google';
+      window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`;
     }, 300);
   };
 
