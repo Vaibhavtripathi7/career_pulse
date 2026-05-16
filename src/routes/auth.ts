@@ -8,6 +8,8 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import requiresauth from '../middlewares/auth.js';
 
+dotenv.config();
+
 const scopes = [
     "https://www.googleapis.com/auth/userinfo.email",
     "https://www.googleapis.com/auth/userinfo.profile",
@@ -70,6 +72,7 @@ authrouter.get('/google/callback', async (req: Request, res:Response)=> {
         res.cookie('careerpulse_auth', token, {
             httpOnly: true,
             secure: true,
+            path: '/',
             sameSite: 'none',
             maxAge: 7*24*60*60*1000
         });
