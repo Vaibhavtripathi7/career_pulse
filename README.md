@@ -9,7 +9,7 @@ A full-stack application tracking platform that automatically synchronizes and o
 ![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL-336791?style=for-the-badge&logo=postgresql)
 ![Docker](https://img.shields.io/badge/Containerization-Docker-2496ED?style=for-the-badge&logo=docker)
 ![AWS](https://img.shields.io/badge/Infrastructure-AWS%20EC2%20%2B%20RDS-FF9900?style=for-the-badge&logo=amazonaws)
-![TypeScript](https://img.shields.io/badge/Language-TypeScript-3178C6?style=for-the-badge&logo=typescript)
+![TypeScript](https://img.shields.io/badge/Language-TypeScript-3178C6?style=for-the-badge&logo=typescript)![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 
 ---
 
@@ -438,3 +438,9 @@ This limitation originates from modern browser privacy policies affecting cross-
 - Enhanced analytics dashboard
 - Resume version tracking
 - Recruiter interaction tracking
+
+---
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for more information.
