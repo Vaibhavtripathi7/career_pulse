@@ -438,3 +438,9 @@ This limitation originates from modern browser privacy policies affecting cross-
 - Enhanced analytics dashboard
 - Resume version tracking
 - Recruiter interaction tracking
+
+---
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for more information.
