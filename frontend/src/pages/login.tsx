@@ -203,7 +203,6 @@ export default function Login() {
             </h1>
             <p className="text-slate-400 text-sm mt-2 leading-relaxed">
               Your intelligent job application tracker.<br />
-              Synced from Gmail. Always up to date.
             </p>
           </div>
 
@@ -257,10 +256,37 @@ export default function Login() {
               </div>
             ))}
           </div>
-
-
         </div>
       </div>
+        <div
+              className="absolute bottom-8 left-1/2 -translate-x-1/2 px-4"
+            >
+              <div
+                className="flex items-center gap-2 rounded-full px-4 py-2"
+                style={{
+                  background: 'rgba(255,255,255,0.03)',
+                  border: '1px solid rgba(255,255,255,0.05)',
+                  backdropFilter: 'blur(10px)',
+                }}
+              >
+                <div
+                  className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                  style={{
+                    background: 'rgba(96,165,250,0.8)',
+                    boxShadow: '0 0 10px rgba(96,165,250,0.45)',
+                  }}
+                />
+
+                <p
+                  className="text-[11px] sm:text-xs tracking-[0.01em]"
+                  style={{
+                    color: 'rgba(148,163,184,0.72)',
+                  }}
+                >
+                  Cross-site cookies may be required for persistent login sessions
+                </p>
+              </div>
+          </div>
     </div>
   );
 }
