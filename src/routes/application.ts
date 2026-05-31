@@ -2,8 +2,6 @@ import { Router } from "express";
 import type { Request, Response } from "express";
 import prisma from "../db.js";
 import requiresauth from "../middlewares/auth.js";
-import { string, success } from "zod";
-import { error } from "node:console";
 
 const router_db = Router();
 
@@ -75,18 +73,33 @@ router_db.patch('/:id', requiresauth, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
+    const userId = (req as any).userId;
 
     if (!id || typeof id !== 'string') {
       return res.status(400).json({ success: false, error: "Invalid ID format"});
+    }
+
+    const application = await prisma.application.findFirst({
+      where: {
+        id,
+        userID: userId
+      }
+    });
+
+    if (!application) {
+      return res.status(404).json({
+        success: false,
+        error: "Application not found"
+      });
     }
     const updated = await prisma.application.update({
       where: { id },
       data: {status} 
     });
 
-    res.json({
+    return res.json({
       success: true,
-      data: updated
+      data: updated 
     });
 
   } catch (error) {

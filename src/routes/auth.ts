@@ -59,7 +59,6 @@ authrouter.get('/google/callback', async (req: Request, res:Response)=> {
                 refreshToken: tokens.refresh_token ?? null 
             } 
         });
-        console.log("success", tokens);
         const payload = {
             userId: user.id };
         
