@@ -4,7 +4,9 @@ import jwt from 'jsonwebtoken';
 function requiresauth(req:Request, res:Response, nextfunction:NextFunction){
     const token = req.cookies.careerpulse_auth;
     if(!token){
-        res.status(401).send("Unathorized")
+        return res.status(401).json({
+            error: "Unauthorized"
+        });
     }
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
