@@ -2,6 +2,7 @@ import { Router } from "express";
 import type { Request, Response } from "express";
 import prisma from "../db.js";
 import requiresauth from "../middlewares/auth.js";
+import { createApplicationSchema, updateStatusSchema } from "../validators/application.validator.js";
 
 const router_db = Router();
 
@@ -34,12 +35,19 @@ router_db.get('/',requiresauth, async (req:Request, res: Response) => {
     
 });
 
+
 router_db.post('/', requiresauth, async (req: Request, res: Response) => {
   try {
     const userId = (req as any).userId;
+    const parsed = createApplicationSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({
+        success: false,
+        error: parsed.error.flatten()
+      });
+    }
 
-    const { subject, companyName, role, status, workModel } = req.body;
-
+    const { subject, companyName, role,status, workModel} = parsed.data;
     const newApp = await prisma.application.create({
       data: {
         subject: subject || "Manual Entry",
@@ -72,7 +80,14 @@ router_db.patch('/:id', requiresauth, async (req: Request, res: Response) => {
 
   try {
     const { id } = req.params;
-    const { status } = req.body;
+    const parsed = updateStatusSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({
+        success: false,
+        error: parsed.error.flatten()
+      });
+    }
+    const { status } = parsed.data;
     const userId = (req as any).userId;
 
     if (!id || typeof id !== 'string') {
