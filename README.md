@@ -135,25 +135,52 @@ The project focuses heavily on backend systems engineering and deployment archit
 ### `User` Model
 
 | Field | Type | Attributes | Description |
-|---|---|---|---|
-| `id` | UUID | `@id @default(uuid())` | Primary Key |
+|--------|--------|------------|-------------|
+| `id` | UUID | `@id @default(uuid())` | Primary key |
 | `email` | String | `@unique` | Authorized email address |
-| `googleId` | String | `@unique` | Google OAuth identity |
-| `accessToken` | String |  | Gmail API authorization token |
-| `refreshToken` | String |  | Token used for session renewal |
+| `name` | String | Optional | User display name |
+| `googleId` | String | `@unique`, Optional | Google OAuth identity |
+| `accessToken` | Text | Optional | Gmail API access token |
+| `refreshToken` | Text | Optional | OAuth refresh token |
+| `createdAt` | DateTime | `@default(now())` | Record creation timestamp |
+| `updatedAt` | DateTime | `@updatedAt` | Last update timestamp |
 
 ---
 
 ### `Application` Model
 
 | Field | Type | Attributes | Description |
-|---|---|---|---|
-| `id` | UUID | `@id @default(uuid())` | Primary Key |
+|--------|--------|------------|-------------|
+| `id` | UUID | `@id @default(uuid())` | Primary key |
 | `messageId` | String | `@unique` | Immutable Gmail message identifier |
-| `companyName` | String |  | Extracted company name |
-| `role` | String |  | Job title or position |
-| `status` | Enum |  | Current application stage |
-| `userId` | UUID | `@relation` | Foreign key referencing `User` |
+| `subject` | String | `@default("None")` | Email subject or application title |
+| `sender` | String | `@default("None")` | Email sender information |
+| `companyName` | String | — | Extracted company name |
+| `role` | String | — | Job title or position |
+| `status` | String | — | Current application stage |
+| `workModel` | String | — | Remote, onsite, or hybrid work model |
+| `userID` | UUID | `@relation`, Optional | Foreign key referencing `User` |
+| `dateApplied` | DateTime | `@default(now())` | Application creation timestamp |
+| `updatedAt` | DateTime | `@updatedAt` | Last update timestamp |
+
+---
+
+### Request Validation
+
+Application requests are validated using Zod schemas before reaching the database.
+
+#### Allowed Status Values
+
+- applied
+- interviewing
+- offer
+- rejected
+
+#### Allowed Work Models
+
+- remote
+- onsite
+- hybrid
 
 ---
 
