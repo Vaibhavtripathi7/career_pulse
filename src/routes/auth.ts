@@ -1,7 +1,7 @@
 import { Router} from 'express';
 import type { Request, Response } from 'express';
 import prisma from '../db.js';
-import oauth2client from '../utils/googleclient.js';
+import { createOAuthClient } from '../utils/googleclient.js';
 import { google } from 'googleapis';
 const  authrouter = Router();
 import jwt from 'jsonwebtoken';
@@ -17,6 +17,7 @@ const scopes = [
 ];
 
 authrouter.get('/google', (req: Request, res: Response)=> {
+    const oauth2client = createOAuthClient();
     const url = oauth2client.generateAuthUrl({
     access_type: 'offline',
     scope: scopes,
@@ -33,6 +34,7 @@ authrouter.get('/google/callback', async (req: Request, res:Response)=> {
         return res.status(400).send("No code provided by google");
     }
     try {
+        const oauth2client = createOAuthClient();
         const { tokens } = await oauth2client.getToken(code);
         oauth2client.setCredentials(tokens);
 
