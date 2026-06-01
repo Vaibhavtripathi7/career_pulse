@@ -22,6 +22,8 @@ model User {
   accessToken  String? @db.Text
   refreshToken String? @db.Text
 
+  lastSyncAt   DateTime?
+
   application Application[]
 
   createdAt DateTime @default(now())

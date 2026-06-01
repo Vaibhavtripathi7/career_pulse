@@ -14,12 +14,13 @@ async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateMany
     const user = await prisma.user.findUnique({
 
         where: {id: userId},
-        select: { refreshToken: true, accessToken: true}
+        select: { refreshToken: true, accessToken: true, lastSyncAt: true}
     });
 
     if (!user || !user.refreshToken) {
-        throw new Error("USer not found");
+        throw new Error("User not found");
     }
+
 
     const oauth2client = new google.auth.OAuth2(
         process.env.CLIENT_ID as string,
@@ -32,11 +33,31 @@ async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateMany
     });
     const gmail = google.gmail({ version: 'v1', auth: oauth2client});
 
-    let mail = await gmail.users.messages.list({userId: 'me', maxResults: 10, q: "(application OR interview OR job OR hiring OR position) -newsletter"})
+    const gmailQuery = user.lastSyncAt
+    ? `(application OR interview OR job OR hiring OR position) after:${Math.floor(user.lastSyncAt.getTime() / 1000)} -newsletter`
+    : `(application OR interview OR job OR hiring OR position) newer_than:30d -newsletter`;
+
+    let mail = await gmail.users.messages.list({userId: 'me', maxResults: 50, q: gmailQuery})
     const message = mail.data.messages;
+
     if (!message || message.length === 0) {
+
+        logger.info(
+            { userId },
+            "No new emails found"
+        );
+
+        await prisma.user.update({
+            where: { id: userId },
+            data: {
+                lastSyncAt: new Date()
+            }
+        });
+
         return [];
-    } 
+    }
+
+
 
     const mail_application = await Promise.all(
         message.map((msg) =>
@@ -103,6 +124,13 @@ async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateMany
         });
     }
     logger.info({count: filtered.length}, "Email processed");
+
+    await prisma.user.update({
+        where: { id: userId },
+        data: {
+        lastSyncAt: new Date()
+    }
+    });
     return filtered; 
 } 
 export default fetchemails;
