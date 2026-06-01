@@ -3,9 +3,10 @@ import 'dotenv/config';
 import prisma from '../db.js';
 import { emailPipeline } from '../pipeline/email.pipeline.js';
 import pLimit from 'p-limit';
-import type { Application, Prisma } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
 import { logger } from "../utils/logger.js";
 import { increment } from '../utils/metrices.js';
+import type { gmail_v1 } from 'googleapis';
 
 const limit = pLimit(2);
 async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateManyInput[]>{
@@ -37,9 +38,34 @@ async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateMany
     ? `(application OR interview OR job OR hiring OR position) after:${Math.floor(user.lastSyncAt.getTime() / 1000)} -newsletter`
     : `(application OR interview OR job OR hiring OR position) newer_than:30d -newsletter`;
 
-    let mail = await gmail.users.messages.list({userId: 'me', maxResults: 50, q: gmailQuery})
-    const message = mail.data.messages;
 
+    const allMessages: gmail_v1.Schema$Message[] = [];
+    let nextPageToken: string | undefined;
+
+    do {
+        const params: gmail_v1.Params$Resource$Users$Messages$List= {
+            userId: "me",
+            maxResults: 50,
+            q: gmailQuery,
+        };
+        if (nextPageToken) {
+            params.pageToken = nextPageToken;
+        }
+
+        const response = await gmail.users.messages.list(params);
+
+        allMessages.push(...(response.data.messages ?? []));
+        nextPageToken = response.data.nextPageToken ?? undefined;
+
+    }   while (nextPageToken);
+
+    logger.info(
+    {
+        count: allMessages.length
+    },
+        "Fetched Gmail messages"
+    );
+    const message = allMessages;
     if (!message || message.length === 0) {
 
         logger.info(
