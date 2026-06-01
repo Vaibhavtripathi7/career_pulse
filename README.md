@@ -38,19 +38,24 @@ The platform integrates with the Gmail API using Google OAuth 2.0, extracts appl
 
 The project focuses heavily on backend systems engineering and deployment architecture, including:
 
-- Cross-origin authentication and secure session handling
-- Containerized backend services using Docker
+- Google OAuth 2.0 authentication and secure session management
+- The project includes a queue-based synchronization architecture implemented using BullMQ and Redis to support asynchronous processing and future scalability.
+- Incremental Gmail synchronization using synchronization checkpoints
+- Paginated mailbox ingestion for large Gmail accounts
+- AI-powered email parsing and structured data extraction
+- PostgreSQL data modeling and query optimization using Prisma
 - Reverse proxy networking with Nginx
 - AWS EC2 and RDS infrastructure deployment
-- Idempotent Gmail synchronization pipelines
+- Containerized local development using Docker Compose
 - Runtime monitoring and process recovery using PM2
 
 ---
 
 ## Application Dashboard
 
-
-![Dashboard Preview](./assets/dashboard_preview.png)
+<p align="center">
+  <img src="./assets/dashboard_preview.png" width="1000">
+</p>
 
 ---
 
@@ -64,6 +69,10 @@ The project focuses heavily on backend systems engineering and deployment archit
 | Duplicate Prevention | Prevents duplicate application records during repeated synchronization cycles |
 | Authentication System | Secure login using Google OAuth 2.0 |
 | Status Management | Organizes applications across different recruitment stages |
+| Incremental Synchronization | Fetches only emails received after the previous synchronization checkpoint|
+| Queue-Based Processing | Implements a queue-based synchronization architecture using BullMQ and Redis |
+| Large Mailbox Support | Uses Gmail pagination to process emails across multiple result pages | 
+| AI-Powered Parsing | Extracts company names, roles, and work models from email content |   
 
 ---
 
@@ -79,8 +88,9 @@ The project focuses heavily on backend systems engineering and deployment archit
 | Containerization | Docker, Docker Compose |
 | Deployment & Runtime | PM2, Certbot, Vercel |
 | Validation & Logging | Zod, Pino |
-| Background Processing | node-cron |
+| Background Processing | node-cron, BullMQ, Redis |
 | Data Visualization | Recharts |
+| Testing & CI | Vitest, GitHub Actions |
 
 ---
 
@@ -88,7 +98,9 @@ The project focuses heavily on backend systems engineering and deployment archit
 
 ### High-Level Application Architecture
 
-![High-level Application Architecture](./assets/system_architecture.drawio.png)
+<p align="center">
+  <img src="./assets/system_architecture.drawio.png" width="650">
+</p>
 
 - The application follows a distributed full-stack architecture with independently deployed frontend and backend services. Authentication, synchronization, processing, and persistent storage are separated into dedicated layers to simplify deployment and maintenance.
 
@@ -96,8 +108,9 @@ The project focuses heavily on backend systems engineering and deployment archit
 
 ### Authentication & Session Flow
 
-![Authentication & Session Flow](./assets/auth_session_flow.drawio.png)
-
+<p align="center">
+  <img src="./assets/auth_session_flow.drawio.png" width="850">
+</p>
 
 - Authentication is handled through Google OAuth 2.0. After successful authorization, the backend generates JWT-based sessions stored in secure HttpOnly cookies. Cross-origin session persistence is enabled through credentialed CORS configuration between the frontend and backend services.
 
@@ -105,27 +118,30 @@ The project focuses heavily on backend systems engineering and deployment archit
 
 ### Gmail Synchronization Pipeline
 
-![Gmail Synchronization Pipeline](./assets/gmail_sync_pipeline.drawio.png)
 
-- The synchronization pipeline periodically fetches Gmail messages, extracts structured application metadata, validates records, and stores normalized data inside PostgreSQL. Immutable Gmail message identifiers are used to guarantee idempotent synchronization and prevent duplicate database writes.
+<p align="center">
+  <img src="./assets/gmail_sync_pipeline.drawio.png" width="450">
+</p>
+
+
+- The synchronization pipeline supports a queue-based architecture using BullMQ and Redis for asynchronous email processing. The current production deployment performs scheduled synchronization through cron-based workers while preserving the same ingestion pipeline.
+
+---
+
+### Deployment Infrastructure
+
+<p align="center">
+  <img src="./assets/deployment_architecture.png" height="170" width="1000">
+</p>
+
+- The frontend is deployed on Vercel, while the backend runs on an AWS EC2 instance behind an Nginx reverse proxy. PostgreSQL is hosted separately on AWS RDS and accessed through restricted security group rules. PM2 is used for process supervision, automatic recovery, and runtime management of backend services.
 
 ---
 
 ### Container & Service Architecture
 
 
-![Container & Service Architecture](./assets/container_service.png)
-
-- Backend services are containerized using Docker Compose with isolated environments for the application server and PostgreSQL database. Internal communication is handled through Docker bridge networking and service discovery.
-
----
-
-### Deployment Infrastructure
-
-
-![Deployment Infrastructure](assets/deployment_architecture.png)
-
-- The frontend is deployed on Vercel, while the backend runs on AWS EC2 behind an Nginx reverse proxy. PostgreSQL is hosted separately on AWS RDS within a restricted VPC configuration.
+- Docker Compose is used exclusively for local development and environment reproducibility. Production services are deployed directly on AWS infrastructure, with the backend running on an EC2 instance managed by PM2 and PostgreSQL hosted on AWS RDS. Docker is primarily used to standardize local development workflows and simplify onboarding.
 
 ---
 
@@ -144,6 +160,7 @@ The project focuses heavily on backend systems engineering and deployment archit
 | `refreshToken` | Text | Optional | OAuth refresh token |
 | `createdAt` | DateTime | `@default(now())` | Record creation timestamp |
 | `updatedAt` | DateTime | `@updatedAt` | Last update timestamp |
+| `lastSyncAt` | DateTime | Optional | Stores the timestamp of the most recent synchronization checkpoint |
 
 ---
 
@@ -236,7 +253,7 @@ The backend uses a multi-stage Docker build pipeline to separate compilation and
 |---|---|
 | Request Validation | Runtime schema validation implemented using Zod |
 | Synchronization Consistency | Immutable Gmail message IDs used for idempotent synchronization |
-| Duplicate Prevention | Database uniqueness constraints prevent redundant records |
+| Duplicate Prevention | Prevents duplicate application records using immutable Gmail message identifiers |
 | ORM Safety | Prisma schema enforcement used for relational consistency |
 
 ---
@@ -246,7 +263,7 @@ The backend uses a multi-stage Docker build pipeline to separate compilation and
 | Area | Implementation |
 |---|---|
 | Process Recovery | PM2 configured for automatic restart on runtime failures |
-| Deployment Stability | Multi-stage Docker builds isolate runtime dependencies |
+| Deployment Stability | Automated build and deployment workflow with PM2 process supervision |
 | Logging | Structured application logging implemented using Pino |
 | Runtime Isolation | Separate frontend, backend, and database deployment layers |
 
@@ -344,6 +361,23 @@ A major focus of the project was understanding how deployment environments intro
 
 **Outcome**  
 - Application startup became predictable and runtime initialization failures were eliminated.
+
+--- 
+
+### Incremental Email Synchronization
+
+**Problem**
+
+* Repeated synchronization cycles scanned previously processed emails, increasing Gmail API usage and synchronization latency.
+
+**Solution**
+
+* Introduced synchronization checkpoints using user-level timestamps. Gmail queries are dynamically restricted to emails received after the previous synchronization checkpoint. Pagination support was added to process emails across multiple Gmail result pages.
+
+**Outcome**
+
+* Reduced redundant email processing, improved synchronization efficiency, and enabled support for larger mailboxes without changing application behavior.
+
 
 ---
 
@@ -454,17 +488,15 @@ This limitation originates from modern browser privacy policies affecting cross-
 
 ### Infrastructure & Scalability
 
-- Redis + BullMQ queue-based synchronization
 - Centralized logging and observability
 - WebSocket-based live synchronization
-- Kubernetes experimentation
+- Kubernetes-based deployment experimentation
 
 ### Product Improvements
 
 - Multi-provider email integration
 - Enhanced analytics dashboard
 - Resume version tracking
-- Recruiter interaction tracking
 
 ---
 
