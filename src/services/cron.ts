@@ -1,7 +1,7 @@
 import cron from 'node-cron'; 
 import type { ScheduledTask } from 'node-cron';
-import fetchemails from '../services/gmail.js';
 import { getAllUsers } from '../services/user.js'; 
+import { emailQueue } from '../queues/email.queue.js';
 
 class EmailCronService {
     private isRunning: boolean = false;
@@ -78,19 +78,30 @@ class EmailCronService {
 
         for (const user of users) {
             try {
-                await fetchemails(user.id);
-
+                await emailQueue.add(
+                    "sync-user",
+                    {
+                        userId: user.id
+                    }
+                );
+                
+                console.log(
+                    this.log(
+                        "JOB_ADDED",
+                        `queue sync for user ${user.id}`
+                    )
+                );
                 console.log(this.log(
-                    'USER_SUCCESS',
-                    `Synced emails for user ${user.id}`
+                    'JOB_QUEUED',
+                    `Queued Synce job for user ${user.id}`
                 ));
 
                 await this.sleep(1000);
 
             } catch (error) {
                 console.error(this.log(
-                    'USER_ERROR',
-                    `Failed for user ${user.id}`,
+                    'QUEUE_ERROR',
+                    `Failed to queue job for user ${user.id}`,
                     error
                 ));
 

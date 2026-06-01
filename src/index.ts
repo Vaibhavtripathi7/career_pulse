@@ -1,5 +1,6 @@
 import app from "./app.js"
 import { emailCronService } from "./services/cron.js";
+import "./email.worker.js";
 
 const PORT = 3000;
 
