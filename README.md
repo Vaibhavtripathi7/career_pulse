@@ -54,7 +54,7 @@ The project focuses heavily on backend systems engineering and deployment archit
 ## Application Dashboard
 
 <p align="center">
-  <img src="./assets/dashboard_preview.png" width="1000">
+  <img src="./assets/dashboard_preview.png" >
 </p>
 
 ---
@@ -99,7 +99,7 @@ The project focuses heavily on backend systems engineering and deployment archit
 ### High-Level Application Architecture
 
 <p align="center">
-  <img src="./assets/system_architecture.drawio.png" width="650">
+  <img src="./assets/system_architecture.drawio.png" >
 </p>
 
 - The application follows a distributed full-stack architecture with independently deployed frontend and backend services. Authentication, synchronization, processing, and persistent storage are separated into dedicated layers to simplify deployment and maintenance.
@@ -109,7 +109,7 @@ The project focuses heavily on backend systems engineering and deployment archit
 ### Authentication & Session Flow
 
 <p align="center">
-  <img src="./assets/auth_session_flow.drawio.png" width="850">
+  <img src="./assets/auth_session_flow.drawio.png" >
 </p>
 
 - Authentication is handled through Google OAuth 2.0. After successful authorization, the backend generates JWT-based sessions stored in secure HttpOnly cookies. Cross-origin session persistence is enabled through credentialed CORS configuration between the frontend and backend services.
@@ -120,7 +120,7 @@ The project focuses heavily on backend systems engineering and deployment archit
 
 
 <p align="center">
-  <img src="./assets/gmail_sync_pipeline.drawio.png" width="450">
+  <img src="./assets/gmail_sync_pipeline.drawio.png" >
 </p>
 
 
@@ -131,7 +131,7 @@ The project focuses heavily on backend systems engineering and deployment archit
 ### Deployment Infrastructure
 
 <p align="center">
-  <img src="./assets/deployment_architecture.png" height="170" width="1000">
+  <img src="./assets/deployment_architecture.png" height="170" >
 </p>
 
 - The frontend is deployed on Vercel, while the backend runs on an AWS EC2 instance behind an Nginx reverse proxy. PostgreSQL is hosted separately on AWS RDS and accessed through restricted security group rules. PM2 is used for process supervision, automatic recovery, and runtime management of backend services.
