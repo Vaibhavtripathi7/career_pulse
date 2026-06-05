@@ -13,10 +13,10 @@ const STATUS_CONFIG: Record<Status, {
   applied: {
     label: 'Applied',
     bg:   'rgba(59,130,246,0.1)',
-    text: '#60a5fa',
+    text: '#ffffff',
     ring: 'rgba(59,130,246,0.25)',
-    dot:  '#3b82f6',
-    glow: 'rgba(59,130,246,0.2)',
+    dot:  '#00FF85',
+    glow: 'rgba(164, 255, 136, 0.38)',
   },
   interviewing: {
     label: 'Interviewing',

@@ -4,26 +4,28 @@
 
 /* ── Design Tokens ────────────────────────────────────────── */
 :root {
-  --bg-void:        #020406;
-  --bg-base:        #060a10;
-  --bg-surface:     #0c1220;
-  --bg-elevated:    #111827;
-  --brand-blue:     #3b82f6;
-  --brand-blue-dim: rgba(59, 130, 246, 0.15);
+  --bg-void:        #212529;
+  --bg-base:        #121212;
+  --bg-surface:     #171717;
+  --bg-elevated:    #1E1E1E;
+  --brand-blue:     #1E90FF;;
+  --brand-blue-dim: rgba(255, 255, 256, 0.04);
   --brand-violet:   #8b5cf6;
   --brand-teal:     #14b8a6;
-  --brand-emerald:  #10b981;
+  --brand-emerald:  #00FF85;
   --border-subtle:  rgba(255, 255, 255, 0.05);
   --border-soft:    rgba(255, 255, 255, 0.08);
   --border-mid:     rgba(255, 255, 255, 0.12);
-  --border-bright:  rgba(59, 130, 246, 0.35);
-  --text-primary:   #f1f5f9;
+  --border-bright:  rgba(255, 255, 255, 0.15);
+  --text-primary:   #FFFFFF;
   --text-secondary: #94a3b8;
   --text-muted:     #475569;
   --glow-card:      0 24px 64px rgba(0,0,0,0.6), 0 1px 0 rgba(255,255,255,0.05) inset;
   --font-display:   'Geist', system-ui, sans-serif;
   --font-mono:      'DM Mono', 'Fira Code', monospace;
   --nav-h:          64px;
+  --brand-gold: #f59e0b;
+  --brand-rose: #FF0099;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -108,20 +110,19 @@ body {
 
 /* ── Utilities ─────────────────────────────────────────────── */
 .glass {
-  background: rgba(12,18,32,0.72);
-  backdrop-filter: blur(24px) saturate(1.5);
-  -webkit-backdrop-filter: blur(24px) saturate(1.5);
-  border: 1px solid var(--border-soft);
+  background: rgba(23,23,23,0.82);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(255,255,255,.06);
 }
 .glow-hover { transition: box-shadow .3s ease, border-color .3s ease; }
 .glow-hover:hover {
-  box-shadow: var(--glow-card), 0 0 0 1px rgba(59,130,246,.2);
+  box-shadow: var(--glow-card), 0 0 0 1px rgba(255, 0, 153, 0.5);
   border-color: var(--border-bright) !important;
 }
 .skeleton {
   background: linear-gradient(
     90deg,
-    rgba(255,255,255,.03) 0px,
+    rgba(210, 11, 11, 0.03) 0px,
     rgba(255,255,255,.08) 40px,
     rgba(255,255,255,.03) 80px
   );

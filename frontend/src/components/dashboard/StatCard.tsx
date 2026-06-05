@@ -4,19 +4,52 @@ interface Props {
   color: string;
 }
 
-export default function StatCard({ label, value, color }: Props) {
+export default function StatCard({
+  label,
+  value,
+  color,
+}: Props) {
   return (
-    <div className="p-[1px] rounded-xl bg-gradient-to-b from-gray-700/40 to-transparent">
-      <div className="bg-gradient-to-b from-gray-900 to-gray-950 rounded-xl p-4 flex flex-col gap-2 transition-all duration-300 hover:shadow-lg hover:shadow-black/40">
-        
-        <span className="text-xs text-gray-400 font-medium">
+    <div
+      className="
+        glass
+        glow-hover
+        rounded-2xl
+        p-5
+        transition-all
+        duration-300
+        group
+        min-h-[120px]
+        flex
+        flex-col
+        justify-between
+        text-center
+      "
+    >
+      <div
+        className={`
+          text-3xl
+          md:text-4xl
+          font-bold
+          tracking-tight
+          ${color}
+        `}
+      >
+        {value}
+      </div>
+
+      <div>
+        <p
+          className="
+            text-[11px]
+            uppercase
+            tracking-[0.18em]
+            text-slate-400
+            font-medium
+          "
+        >
           {label}
-        </span>
-
-        <span className={`text-2xl font-semibold tracking-tight ${color}`}>
-          {value}
-        </span>
-
+        </p>
       </div>
     </div>
   );
