@@ -54,8 +54,13 @@ The project focuses heavily on backend systems engineering and deployment archit
 ## Application Dashboard
 
 <p align="center">
-  <img src="./assets/dashboard_preview.png" >
+  <img src="./assets/career_pulse_.gif" >
 </p>
+
+<p align="center">
+  <img src="./assets/career_pulse_1.gif" >
+</p>
+
 
 ---
 
