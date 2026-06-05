@@ -7,6 +7,8 @@ import type { Prisma } from '@prisma/client';
 import { logger } from "../utils/logger.js";
 import { increment } from '../utils/metrices.js';
 import type { gmail_v1 } from 'googleapis';
+import { extractSenderDomain, normalizeCompany } from '../utils/applicationMetadata.js';
+import { unknown } from 'zod';
 
 const limit = pLimit(2);
 async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateManyInput[]>{
@@ -93,6 +95,7 @@ async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateMany
                 try {
                     if (!msg.id) return null;
                     const main_content = await gmail.users.messages.get({userId: 'me' ,id: msg.id});
+                    const gmailThreadId = main_content.data.threadId ?? null;
                     const list_of_objects = main_content.data.payload?.headers;
 
                     const subject_value = list_of_objects?.find(header => header.name === 'Subject')?.value;
@@ -107,6 +110,10 @@ async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateMany
                         snippet: snippet_value as string
                         });
 
+                    const senderDomain = extractSenderDomain(formValue)
+                    const normalizedCompany = parsed.companyName
+                            ? normalizeCompany(parsed.companyName)
+                            : null;
 
                     const rawDate = main_content.data.internalDate;
                     const headerDate = list_of_objects?.find(h=> h.name === 'Date')?.value;
@@ -124,9 +131,14 @@ async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateMany
                         messageId: msg.id,
                         sender: formValue as string,
 
-                        companyName: parsed.companyName as string,
-                        role: parsed.role as string,
-                        workModel: parsed.workModel as string,
+                        companyName: parsed.companyName ?? "Unknown",
+                        role: parsed.role ?? "Unknown",
+                        workModel: parsed.workModel ?? "Unknown",
+
+                        gmailThreadId,
+                        senderDomain,
+                        normalizedCompany,
+
                         status: "Applied",
                         userID: userId,
                         dateApplied: finalDate ?? new Date() 

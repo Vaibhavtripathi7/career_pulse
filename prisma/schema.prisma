@@ -40,6 +40,10 @@ model Application {
   status      String
   workModel   String
 
+  gmailThreadId   String?
+  senderDomain    String?
+  normalizedCompany    String?
+
   userID String?
   user   User?   @relation(fields: [userID], references: [id], onDelete: Cascade)
 
@@ -47,4 +51,6 @@ model Application {
   updatedAt   DateTime @updatedAt
 
   @@index([userID, updatedAt])
+  @@index([userID, normalizedCompany])
+  @@index([userID, senderDomain])
 }
