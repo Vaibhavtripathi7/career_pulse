@@ -28,7 +28,7 @@ function CustomDot(props: any) {
   const { cx, cy } = props;
   return (
     <g>
-      <circle cx={cx} cy={cy} r={6} fill="#3b82f6" style={{ filter: 'drop-shadow(0 0 6px rgba(59,130,246,0.8))' }} />
+      <circle cx={cx} cy={cy} r={6} fill="#00FF85" style={{ filter: 'drop-shadow(0 0 6px rgba(59,130,246,0.8))' }} />
       <circle cx={cx} cy={cy} r={3} fill="#fff" />
     </g>
   );
@@ -41,7 +41,7 @@ export default function ActivityChart({ data }: Props) {
     <div
       className="rounded-2xl p-5 h-[300px] flex flex-col"
       style={{
-        background: 'rgba(12,18,32,0.7)',
+        background: 'rgb(0, 0, 0)',
         border: '1px solid rgba(255,255,255,0.07)',
         boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
       }}
@@ -56,8 +56,8 @@ export default function ActivityChart({ data }: Props) {
             <AreaChart data={data} margin={{ top: 4, right: 4, bottom: 0, left: -24 }}>
               <defs>
                 <linearGradient id="blueGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%"   stopColor="#3b82f6" stopOpacity={0.3} />
-                  <stop offset="100%" stopColor="#3b82f6" stopOpacity={0} />
+                  <stop offset="20%"   stopColor="#00FF85" stopOpacity={1} />
+                  <stop offset="100%" stopColor="#00FF85" stopOpacity={0.02} />
                 </linearGradient>
               </defs>
 
@@ -86,7 +86,7 @@ export default function ActivityChart({ data }: Props) {
               <Area
                 type="monotoneX"
                 dataKey="count"
-                stroke="#3b82f6"
+                stroke="#000000"
                 strokeWidth={2}
                 fill="url(#blueGrad)"
                 dot={false}

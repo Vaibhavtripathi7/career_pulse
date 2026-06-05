@@ -137,96 +137,236 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="relative min-h-screen bg-black text-white overflow-hidden p-6">
+    <div className="noise relative min-h-screen overflow-hidden text-white">
       <Toaster position="top-right" />
+    <div className="max-w-[1500px] mx-auto px-6 py-6">
+      <div className="mb-8">
 
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.15),transparent_60%)] pointer-events-none" />
+        <div className="flex items-center justify-between mb-4">
 
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">
-          Career<span className="text-blue-500">Pulse</span>
-        </h1>
+          <h1 className="text-3xl font-bold tracking-tight">
+            Career<span className="bg-gradient-to-r from-[#00FF85] to-[#6fffe9] bg-clip-text text-transparent">Pulse</span>
+          </h1>
 
-        <div className="flex gap-2">
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="px-4 py-2 bg-white/10 rounded-lg"
-          >
-            + Add
-          </button>
-
-          <button
-            onClick={handleSync}
-            disabled={isSyncing}
-            className="px-4 py-2 bg-blue-600 rounded-lg"
-          >
-            {isSyncing ? "Syncing..." : "Sync"}
-          </button>
         </div>
-      </div>
 
-      <div className="flex gap-4 mb-6">
-        <input
-          placeholder="Search..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="px-4 py-2 rounded-lg bg-white/10 w-full"
-        />
 
-        <select
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          className="px-3 py-2 bg-white/10 rounded-lg"
-        >
-          <option value="all">All</option>
-          <option value="applied">Applied</option>
-          <option value="interviewing">Interviewing</option>
-          <option value="offer">Offer</option>
-          <option value="rejected">Rejected</option>
-        </select>
-      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="flex flex-col lg:flex-row gap-3">
 
-        <div className="lg:col-span-2 space-y-6">
+          {/* Search */}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <StatusPieChart data={pieData} />
-            <ActivityChart data={activityData} />
-          </div>
+          <div className="flex-1">
 
-          <div ref={listRef} className="space-y-4">
-            {finalApps.length > 0 ? (
-              finalApps.map(app => (
-                <ApplicationCard key={app.id} application={app} />
-              ))
-            ) : (
-              <div className="text-center py-16 space-y-3">
-                <div className="text-4xl">📭</div>
-                <h3 className="text-lg text-gray-300">No applications yet</h3>
+            <input
+              placeholder="Search applications..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="
+                w-full
+                px-4
+                py-3
+                rounded-xl
+                bg-white/[0.04]
+                border
+                border-white/[0.06]
+                outline-none
+                hover:border-[#00FF85]/30
+                focus:shadow-[0_0_12px_rgba(0,255,133,0.08)]
+                transition-all
+              "
+            />
+
               </div>
-            )}
+
+          {/* Controls */}
+
+              <div className="flex gap-3">
+
+                <button
+                  onClick={() => setIsModalOpen(true)}
+                  className="
+                    px-5
+                    py-3
+                    rounded-xl
+                    glass
+                    font-semibold
+                    hover:border-[#00FF85]/30
+                    transition-all
+                  "
+                >
+                  + Add
+                </button>
+
+                <button
+                  onClick={handleSync}
+                  disabled={isSyncing}
+                  className="
+                    px-5
+                    py-3
+                    rounded-xl
+                    bg-[#00FF85]
+                    hover:shadow-[0_0_20px_rgba(0,255,133,0.25)]
+                    text-black
+                    font-semibold
+                    hover:bg-blue-500
+                    transition-all duration-300
+                    "
+                >
+                  {isSyncing ? "Syncing..." : "Sync"}
+                </button>
+
+              </div>
+
           </div>
-
         </div>
+      
+        <section className="mb-10">
+            <div className="mb-4">
+          <h2
+            className="
+              text-xl
+              font-semibold
+              text-slate-200
+              gap-6
+            "
+          >
+            Overview
+          </h2>
+          <p className="text-sm text-zinc-500"> Track applications, interviews and offers</p>
+            </div>
+          
+            <div
+              className="
+                rounded-3xl
+                border border-white/[0.06]
+                bg-zinc-950/70
+                backdrop-blur-xl
+                p-6
+                shadow-[0_0_40px_rgba(0,0,0,0.35)]
+              "
+            >
 
-        <div className="space-y-4">
-          <StatCard label="Total" value={stats.total} color="text-white" />
-          <StatCard label="Applied" value={stats.applied} color="text-blue-400" />
-          <StatCard label="Interviewing" value={stats.interviewing} color="text-purple-400" />
-          <StatCard label="Offers" value={stats.offer} color="text-green-400" />
-          <StatCard label="Rejected" value={stats.rejected} color="text-red-400" />
-        </div>
+              <div
+                className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4"
+              >
 
-      </div>
+                <StatCard
+                  label="Total"
+                  value={stats.total}
+                  color="text-white"
+                />
 
-      {isModalOpen && (
-        <AddApplicationModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          onAdd={handleAdd}
-/>
-      )}
+                <StatCard
+                  label="Applied"
+                  value={stats.applied}
+                  color="text-blue-400"
+                />
+
+                <StatCard
+                  label="Interviewing"
+                  value={stats.interviewing}
+                  color="text-purple-400"
+                />
+
+                <StatCard
+                  label="Offers"
+                  value={stats.offer}
+                  color="text-amber-400"
+                />
+
+                <StatCard
+                  label="Rejected"
+                  value={stats.rejected}
+                  color="text-rose-400"
+                />
+
+              </div>
+
+              {/* PIE */}
+              <div className="border-t border-white/[0.2] my-8" />
+
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-8">
+                <StatusPieChart data={pieData} />
+              
+                <ActivityChart data={activityData} />
+
+              </div>
+
+              {/* ACTIVITY */}
+
+            </div>
+
+
+        </section>
+
+
+            <section>
+
+          <div
+            className="
+              flex
+              items-center
+              justify-between
+              mb-4
+            "
+          >
+
+            <h2
+              className="
+                text-xl
+                font-semibold
+                text-slate-200
+              "
+            >
+              Recent Applications
+            </h2>
+
+                <select
+                  value={filter}
+                  onChange={(e) => setFilter(e.target.value)}
+                  className="
+                    px-2
+                    py-2
+                    rounded-xl
+                    bg-zinc-950
+                    border
+                    border-white/[0.06]
+                    hover:border-[#00FF85]/30
+                    cursor-pointer
+                  "
+                >
+                  <option value="all">All</option>
+                  <option value="applied">Applied</option>
+                  <option value="interviewing">Interviewing</option>
+                  <option value="offer">Offer</option>
+                  <option value="rejected">Rejected</option>
+                </select>
+            </div>
+
+
+            <div ref={listRef} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-7">
+                    {finalApps.length > 0 ? (
+                      finalApps.map(app => (
+                        <ApplicationCard key={app.id} application={app} />
+                      ))
+                    ) : (
+                      <div className="text-center py-16 space-y-3">
+                        <div className="text-4xl">📭</div>
+                        <h3 className="text-lg text-gray-300">No applications yet</h3>
+                      </div>
+                    )}
+              </div>
+            </section>
+
+              {isModalOpen && (
+                <AddApplicationModal
+                  isOpen={isModalOpen}
+                  onClose={() => setIsModalOpen(false)}
+                  onAdd={handleAdd}
+        />
+              )}
+            </div>
     </div>
   );
 }

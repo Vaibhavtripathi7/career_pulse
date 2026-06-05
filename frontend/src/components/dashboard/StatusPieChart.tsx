@@ -3,7 +3,7 @@ import {PieChart, Pie, Cell, Tooltip, ResponsiveContainer,} from 'recharts';
 interface Props {
   data: { name: string; value: number }[];
 }
-const COLORS = ['#3b82f6', '#8b5cf6', '#10b981', '#ef4444'];
+const COLORS = ['#00FF85', '#8b5cf6', '#10b981', '#ef4444'];
 const GLOWS  = [
   'rgba(59,130,246,0.5)',
   'rgba(139,92,246,0.5)',
@@ -44,7 +44,7 @@ export default function StatusPieChart({ data }: Props) {
     <div
       className="rounded-2xl p-5 h-[300px] flex flex-col"
       style={{
-        background: 'rgba(12,18,32,0.7)',
+        background: 'rgb(0, 0, 0)',
         border: '1px solid rgba(255,255,255,0.07)',
         boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
       }}
