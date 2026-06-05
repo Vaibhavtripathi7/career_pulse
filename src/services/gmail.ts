@@ -7,9 +7,23 @@ import type { Prisma } from '@prisma/client';
 import { logger } from "../utils/logger.js";
 import { increment } from '../utils/metrices.js';
 import type { gmail_v1 } from 'googleapis';
-
+import { extractSenderDomain, normalizeCompany } from '../utils/applicationMetadata.js';
+import { classifyEmail } from "../services/emailClassifier.js";
+import { matchApplication } from "../services/applicationMatcher.js";
+import {classificationToStatus, type ApplicationStatus,} from "../services/lifecycleEngine.js";
+import { canTransition } from "../services/statusTransition.js";
 const limit = pLimit(2);
+
+
+
 async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateManyInput[]>{
+
+    const existingApplications =
+        await prisma.application.findMany({
+            where: {
+            userID: userId
+            }
+    });
 
     logger.info({userId}, "Fetching emails");
     const user = await prisma.user.findUnique({
@@ -93,6 +107,7 @@ async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateMany
                 try {
                     if (!msg.id) return null;
                     const main_content = await gmail.users.messages.get({userId: 'me' ,id: msg.id});
+                    const gmailThreadId = main_content.data.threadId ?? null;
                     const list_of_objects = main_content.data.payload?.headers;
 
                     const subject_value = list_of_objects?.find(header => header.name === 'Subject')?.value;
@@ -106,7 +121,70 @@ async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateMany
                         sender: formValue as string,
                         snippet: snippet_value as string
                         });
+                    const emailType = classifyEmail({
+                        subject: subject_value,
+                        sender: formValue,
+                        snippet: snippet_value ?? "",
+                        });
+                    
+                    const senderDomain = extractSenderDomain(formValue)
+                    const normalizedCompany = parsed.companyName
+                            ? normalizeCompany(parsed.companyName)
+                            : null;
+                    const match = matchApplication(
+                            existingApplications,
+                            {
+                                gmailThreadId,
+                                senderDomain,
+                                normalizedCompany,
+                            }
+                            );
 
+                            const nextStatus =
+                            classificationToStatus(emailType);
+                            if (
+                                match.application &&
+                                !nextStatus
+                                ) {
+                                return null;
+                                }
+                            if (
+                            match.application &&
+                            nextStatus &&
+                            match.confidence > 0
+                            ) {
+
+                            const currentStatus =
+                                match.application.status as ApplicationStatus;
+
+                            if (
+                                canTransition(
+                                currentStatus,
+                                nextStatus
+                                )
+                            ) {
+
+                                await prisma.application.update({
+                                where: {
+                                    id: match.application.id,
+                                },
+                                data: {
+                                    status: nextStatus,
+                                },
+                                });
+
+                                logger.info(
+                                {
+                                    applicationId: match.application.id,
+                                    oldStatus: currentStatus,
+                                    newStatus: nextStatus,
+                                },
+                                "Application status updated"
+                                );
+
+                                return null;
+                            }
+                            }
 
                     const rawDate = main_content.data.internalDate;
                     const headerDate = list_of_objects?.find(h=> h.name === 'Date')?.value;
@@ -117,6 +195,9 @@ async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateMany
                         ? new Date(Number(rawDate))
                         : null;
                     
+
+
+
                     increment("success");
                     return {
 
@@ -124,9 +205,14 @@ async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateMany
                         messageId: msg.id,
                         sender: formValue as string,
 
-                        companyName: parsed.companyName as string,
-                        role: parsed.role as string,
-                        workModel: parsed.workModel as string,
+                        companyName: parsed.companyName ?? "Unknown",
+                        role: parsed.role ?? "Unknown",
+                        workModel: parsed.workModel ?? "Unknown",
+
+                        gmailThreadId,
+                        senderDomain,
+                        normalizedCompany,
+
                         status: "Applied",
                         userID: userId,
                         dateApplied: finalDate ?? new Date() 
