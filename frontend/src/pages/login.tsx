@@ -117,7 +117,7 @@ export default function Login() {
           ref={orbRef1}
           className="absolute -top-40 -left-40 w-[700px] h-[700px] rounded-full"
           style={{
-            background: 'radial-gradient(circle, rgba(59,130,246,0.18) 0%, transparent 70%)',
+            background: 'radial-gradient(circle, rgba(99, 252, 249, 0.09) 0%, transparent 70%)',
             filter: 'blur(0px)',
           }}
         />
@@ -125,14 +125,14 @@ export default function Login() {
           ref={orbRef2}
           className="absolute -bottom-40 -right-40 w-[600px] h-[600px] rounded-full"
           style={{
-            background: 'radial-gradient(circle, rgba(139,92,246,0.14) 0%, transparent 70%)',
+            background: 'radial-gradient(circle, rgba(138, 92, 246, 0.11) 0%, transparent 70%)',
           }}
         />
         <div
           ref={orbRef3}
           className="absolute top-1/2 right-1/4 w-[400px] h-[400px] rounded-full"
           style={{
-            background: 'radial-gradient(circle, rgba(20,184,166,0.08) 0%, transparent 70%)',
+            background: 'radial-gradient(circle, rgba(5, 184, 163, 0.04) 0%, transparent 70%)',
           }}
         />
         <div
@@ -168,7 +168,7 @@ export default function Login() {
             <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-5"
               style={{
                 background: 'linear-gradient(135deg, rgba(59,130,246,0.2), rgba(139,92,246,0.15))',
-                border: '1px solid rgba(59,130,246,0.3)',
+                border: '1px solid rgba(254, 254, 254, 0.3)',
                 boxShadow: '0 0 24px rgba(59,130,246,0.2)',
               }}
             >
@@ -195,7 +195,7 @@ export default function Login() {
               style={{ fontFamily: 'var(--font-display)' }}
             >
               Career<span style={{
-                background: 'linear-gradient(90deg, #3b82f6, #8b5cf6)',
+                background: 'linear-gradient(90deg, #00FF85, #6fffe9)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
@@ -205,6 +205,7 @@ export default function Login() {
               Your intelligent job application tracker.<br />
             </p>
           </div>
+          <div className="border-t border-white/[0.2] my-8" />
 
           <button
             onClick={handleGoogleLogin}
@@ -212,8 +213,10 @@ export default function Login() {
             className="w-full group relative flex items-center justify-center gap-3 px-6 py-3.5 rounded-xl font-semibold text-sm transition-all duration-300 active:scale-[.97]"
             style={{
               background: loading ? 'rgba(255,255,255,0.85)' : '#ffffff',
+              
               color: '#1e293b',
               boxShadow: loading
+              
                 ? 'none'
                 : '0 4px 16px rgba(0,0,0,.4), 0 1px 0 rgba(255,255,255,.8) inset',
             }}
