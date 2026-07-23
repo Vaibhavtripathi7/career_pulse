@@ -5,7 +5,7 @@ import { vi } from "vitest";
 vi.mock("../parsers/gemini.parser.js", () => ({
   parseWithGemini: vi.fn().mockResolvedValue({
     companyName: "Google",
-    role: "SDE",
+    role: "Software Engineer",
   }),
 }));
 
@@ -20,6 +20,6 @@ describe("Email Pipeline", () => {
     const result = await emailPipeline(email);
 
     expect(result.companyName).toBe("Google");
-    expect(result.role).toBe("SDE");
+    expect(result.role).toBe("Software Engineer");
   });
 });

@@ -78,4 +78,68 @@ describe("classifyEmail", () => {
     })
   ).toBe("REJECTION");
 });
+
+  it("does NOT mark 'thank you for your interest' alone as rejection", () => {
+    expect(
+      classifyEmail({
+        subject: "Application Received",
+        sender: "no-reply@hire.lever.co",
+        snippet:
+          "Thank you for your interest in Razorpay. We have received your application.",
+      })
+    ).toBe("APPLICATION");
+  });
+
+  it("marks 'thank you for your interest' + rejection cue as rejection", () => {
+    expect(
+      classifyEmail({
+        subject: "Your application",
+        sender: "test@test.com",
+        snippet:
+          "Thank you for your interest in Acme. We have decided to pursue other candidates and wish you the best.",
+      })
+    ).toBe("REJECTION");
+  });
+
+  it("does not classify 'offerings' as an offer", () => {
+    expect(
+      classifyEmail({
+        subject: "Our new product offerings",
+        sender: "test@test.com",
+        snippet: "Check out the latest offerings from our platform.",
+      })
+    ).toBe("UNKNOWN");
+  });
+
+  it("does not treat unrelated scheduling as an interview", () => {
+    expect(
+      classifyEmail({
+        subject: "Delivery scheduled",
+        sender: "test@test.com",
+        snippet: "Your package delivery is scheduled for tomorrow.",
+      })
+    ).toBe("UNKNOWN");
+  });
+
+  it("treats scheduling with recruiter context as an interview", () => {
+    expect(
+      classifyEmail({
+        subject: "Next round",
+        sender: "test@test.com",
+        snippet:
+          "Please share your availability for a call with the recruiter this week.",
+      })
+    ).toBe("INTERVIEW");
+  });
+
+  it("classifies using the body when snippet is thin", () => {
+    expect(
+      classifyEmail({
+        subject: "Update from Acme",
+        sender: "test@test.com",
+        snippet: "Hi there,",
+        body: "We are pleased to offer you the position. Your offer letter is attached.",
+      })
+    ).toBe("OFFER");
+  });
 });

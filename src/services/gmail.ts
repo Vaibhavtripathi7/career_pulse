@@ -8,6 +8,7 @@ import { logger } from "../utils/logger.js";
 import { increment } from '../utils/metrices.js';
 import type { gmail_v1 } from 'googleapis';
 import { extractSenderDomain, normalizeCompany } from '../utils/applicationMetadata.js';
+import { extractEmailBody } from '../utils/extractEmailBody.js';
 import { classifyEmail } from "../services/emailClassifier.js";
 import { matchApplication } from "../services/applicationMatcher.js";
 import {classificationToStatus, type ApplicationStatus,} from "../services/lifecycleEngine.js";
@@ -116,15 +117,26 @@ async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateMany
                     const snippet_value = main_content.data.snippet;
                     if (!subject_value || !formValue) return null;
 
+                    const body_text = extractEmailBody(main_content.data.payload);
+                    const label_ids = main_content.data.labelIds ?? [];
+
                     const parsed = await emailPipeline({
                         subject: subject_value as string,
                         sender: formValue as string,
-                        snippet: snippet_value as string
+                        snippet: snippet_value as string,
+                        body: body_text,
+                        labelIds: label_ids
                         });
+
+                    if (parsed.companyName === "IGNORE") {
+                        logger.info({ subject: subject_value }, "Ignored recommendation email");
+                        return null;
+                    }
                     const emailType = classifyEmail({
                         subject: subject_value,
                         sender: formValue,
                         snippet: snippet_value ?? "",
+                        body: body_text,
                         });
                     
                     const senderDomain = extractSenderDomain(formValue)
