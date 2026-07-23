@@ -694,7 +694,7 @@ export const SOURCE_REGISTRY: SourceRule[] = [
   {
     name: "ZOHO_RECRUIT",
     kind: "ATS",
-    domains: ["zohorecruit.com", "zohorecruit.in", "zoho.com"],
+    domains: ["zohorecruit.com", "zohorecruit.in"],
     company: [...COMMON_COMPANY, ...DISPLAY_NAME_COMPANY],
     role: [...COMMON_ROLE],
   },

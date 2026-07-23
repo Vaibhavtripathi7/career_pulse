@@ -8,14 +8,7 @@ export interface EmailFixture {
     | { ignore?: false; company: string; role?: string };
 }
 
-/**
- * Realistic corpus modeled on actual confirmation/alert formats from the
- * sources CareerPulse targets (India-first + global ATS + remote boards).
- */
 export const EMAIL_FIXTURES: EmailFixture[] = [
-
-  /* ============================ INDIA BOARDS ============================ */
-
   {
     name: "naukri application confirmation",
     input: {
@@ -116,8 +109,6 @@ export const EMAIL_FIXTURES: EmailFixture[] = [
     },
     expected: { company: "Flipkart" },
   },
-
-  /* ============================ GLOBAL ATS ============================= */
 
   {
     name: "workday confirmation (unisys)",
@@ -260,8 +251,6 @@ export const EMAIL_FIXTURES: EmailFixture[] = [
     expected: { company: "Turing", role: "Remote Backend Developer" },
   },
 
-  /* ======================= DIRECT COMPANY EMAILS ======================= */
-
   {
     name: "direct confirmation with role",
     input: {
@@ -341,8 +330,6 @@ export const EMAIL_FIXTURES: EmailFixture[] = [
     },
     expected: { company: "PostHog", role: "Product Engineer" },
   },
-
-  /* ============================== JUNK ================================ */
 
   {
     name: "seek job recommendations",

@@ -128,19 +128,10 @@ async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateMany
                         labelIds: label_ids
                         });
 
-                    if (
-    parsed.companyName === "IGNORE"
-) {
-
-    logger.info(
-    {
-        subject: subject_value
-    },
-    "Ignored recommendation email"
-    );
-
-    return null;
-}
+                    if (parsed.companyName === "IGNORE") {
+                        logger.info({ subject: subject_value }, "Ignored recommendation email");
+                        return null;
+                    }
                     const emailType = classifyEmail({
                         subject: subject_value,
                         sender: formValue,

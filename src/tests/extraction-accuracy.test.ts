@@ -2,10 +2,6 @@ import { describe, it, expect, vi } from "vitest";
 import { parseEmail } from "../parsers/index.js";
 import { EMAIL_FIXTURES } from "./fixtures/emails.js";
 
-/*
- * Gemini is mocked to a no-op so this suite measures the DETERMINISTIC
- * layer alone. In production the LLM fallback only raises accuracy further.
- */
 vi.mock("../parsers/gemini.parser.js", () => ({
   parseWithGemini: vi.fn().mockResolvedValue({
     isJobApplicationEvent: true,

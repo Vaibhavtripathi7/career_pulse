@@ -5,7 +5,6 @@ const COMPANY_STOPLIST = new Set([
   "notification", "support", "mail", "email", "info", "admin", "hello",
   "contact", "update", "updates", "applications", "application", "apply",
   "the team", "talent acquisition", "people team", "unknown", "unknown company",
-  // ATS / job-board product names — classic wrong-extraction bug
   "workday", "greenhouse", "lever", "ashby", "ashbyhq", "icims", "taleo",
   "successfactors", "smartrecruiters", "workable", "jobvite", "bamboohr",
   "recruitee", "teamtailor", "jazzhr", "breezy", "personio", "rippling",
