@@ -16,6 +16,16 @@ services:
       timeout: 5s
       retries: 5
 
+  pulse-redis:
+    image: redis:7-alpine
+    container_name: pulse_redis
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   pulse-api:
     build: .
     container_name: pulse_backend
@@ -24,11 +34,15 @@ services:
     depends_on:
       pulse-db:
         condition: service_healthy
+      pulse-redis:
+        condition: service_healthy
 
     env_file:
       - .env.docker
     environment:
       NODE_ENV: production
+      REDIS_HOST: pulse-redis
+      REDIS_PORT: 6379
 
   prometheus:
     image: prom/prometheus:latest
@@ -47,8 +61,8 @@ services:
     container_name: pulse_grafana
     restart: unless-stopped
     environment:
-      GF_SECURITY_ADMIN_USER: admin
-      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
       GF_USERS_ALLOW_SIGN_UP: "false"
     volumes:
       - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
