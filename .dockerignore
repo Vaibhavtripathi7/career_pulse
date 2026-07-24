@@ -1,4 +1,10 @@
 node_modules
+dist
 frontend
+monitoring
+.git
+.github
+.claude
 .env
-.env.docker
+.env.*
+*.md
