@@ -3,7 +3,7 @@ import type { GenerativeModel } from "@google/generative-ai";
 import type { EmailInput } from "../types/email.types.js";
 import dotenv from "dotenv";
 import { logger } from "../utils/logger.js";
-import { increment } from "../utils/metrices.js";
+import { llmCallsTotal, llmCallDuration } from "../utils/metrics.js";
 dotenv.config();
 
 export interface GeminiParseResult {
@@ -134,16 +134,18 @@ export async function parseWithGemini(
   const cached = cache.get(key);
   if (cached && Date.now() - cached.time < CACHE_TTL) {
     logger.info("gemini cache hit");
+    llmCallsTotal.inc({ outcome: "cache_hit" });
     return cached.data;
   }
 
   return _enqueue(async () => {
     const hot = cache.get(key);
     if (hot && Date.now() - hot.time < CACHE_TTL) {
+      llmCallsTotal.inc({ outcome: "cache_hit" });
       return hot.data;
     }
 
-    increment("llmCalls");
+    const endTimer = llmCallDuration.startTimer();
 
     const body = (input.body ?? "").slice(0, 2000);
 
@@ -181,9 +183,12 @@ Body: ${body}
       };
 
       cache.set(key, { data: finalResult, time: Date.now() });
+      endTimer();
+      llmCallsTotal.inc({ outcome: "success" });
       return finalResult;
     } catch (error: unknown) {
-      increment("llmFailures");
+      endTimer();
+      llmCallsTotal.inc({ outcome: "failure" });
       const errorMessage =
         error instanceof Error ? error.message : String(error);
       logger.error({ error: errorMessage }, "Gemini parsing failed:");
