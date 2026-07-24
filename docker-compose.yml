@@ -3,10 +3,11 @@ services:
     image: postgres:15-alpine
     container_name: pulse_database
     restart: unless-stopped
-
+    ports:
+      - "5432:5432"
     env_file:
       - .env.docker
-      
+
     volumes:
       - pgdata:/var/lib/postgresql/data
 
@@ -20,41 +21,25 @@ services:
     image: redis:7-alpine
     container_name: pulse_redis
     restart: unless-stopped
+    ports:
+      - "6379:6379"
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s
       timeout: 5s
       retries: 5
 
-  pulse-api:
-    build: .
-    container_name: pulse_backend
-    ports:
-      - "3000:3000"
-    depends_on:
-      pulse-db:
-        condition: service_healthy
-      pulse-redis:
-        condition: service_healthy
-
-    env_file:
-      - .env.docker
-    environment:
-      NODE_ENV: production
-      REDIS_HOST: pulse-redis
-      REDIS_PORT: 6379
-
   prometheus:
     image: prom/prometheus:latest
     container_name: pulse_prometheus
     restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus_data:/prometheus
     ports:
       - "9090:9090"
-    depends_on:
-      - pulse-api
 
   grafana:
     image: grafana/grafana:latest
