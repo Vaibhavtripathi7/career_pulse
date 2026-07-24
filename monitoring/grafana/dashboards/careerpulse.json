@@ -45,7 +45,7 @@
     {
       "id": 3,
       "type": "timeseries",
-      "title": "HTTP Error Rate (5xx)",
+      "title": "HTTP Error Rate (4xx / 5xx)",
       "gridPos": { "h": 8, "w": 8, "x": 16, "y": 0 },
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "fieldConfig": { "defaults": { "unit": "reqps" }, "overrides": [] },
@@ -53,8 +53,8 @@
         {
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "sum(rate(http_requests_total{status_code=~\"5..\"}[5m]))",
-          "legendFormat": "5xx"
+          "expr": "sum(rate(http_requests_total{status_code=~\"4..|5..\"}[5m])) by (status_code)",
+          "legendFormat": "{{status_code}}"
         }
       ]
     },
