@@ -29,3 +29,30 @@ export type ApplicationStatus =
       return null;
   }
 }
+
+export function toApplicationStatus(
+  status: string
+): ApplicationStatus | null {
+
+  switch (status.toLowerCase()) {
+
+    case "applied":
+      return "Applied";
+
+    case "assessment":
+      return "Assessment";
+
+    case "interview":
+    case "interviewing":
+      return "Interview";
+
+    case "offer":
+      return "Offer";
+
+    case "rejected":
+      return "Rejected";
+
+    default:
+      return null;
+  }
+}

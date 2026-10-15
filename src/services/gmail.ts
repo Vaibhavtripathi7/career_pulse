@@ -11,7 +11,7 @@ import { extractSenderDomain, normalizeCompany } from '../utils/applicationMetad
 import { extractEmailBody } from '../utils/extractEmailBody.js';
 import { classifyEmail } from "../services/emailClassifier.js";
 import { matchApplication } from "../services/applicationMatcher.js";
-import {classificationToStatus, type ApplicationStatus,} from "../services/lifecycleEngine.js";
+import {classificationToStatus, toApplicationStatus,} from "../services/lifecycleEngine.js";
 import { canTransition } from "../services/statusTransition.js";
 const limit = pLimit(2);
 
@@ -168,9 +168,10 @@ async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateMany
                             ) {
 
                             const currentStatus =
-                                match.application.status as ApplicationStatus;
+                                toApplicationStatus(match.application.status);
 
                             if (
+                                currentStatus &&
                                 canTransition(
                                 currentStatus,
                                 nextStatus
