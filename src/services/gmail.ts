@@ -5,7 +5,7 @@ import { emailPipeline } from '../pipeline/email.pipeline.js';
 import pLimit from 'p-limit';
 import type { Prisma } from '@prisma/client';
 import { logger } from "../utils/logger.js";
-import { increment } from '../utils/metrices.js';
+import { emailsProcessedTotal, emailSyncDuration } from '../utils/metrics.js';
 import type { gmail_v1 } from 'googleapis';
 import { extractSenderDomain, normalizeCompany } from '../utils/applicationMetadata.js';
 import { extractEmailBody } from '../utils/extractEmailBody.js';
@@ -37,6 +37,7 @@ async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateMany
         throw new Error("User not found");
     }
 
+    const endSync = emailSyncDuration.startTimer();
 
     const oauth2client = new google.auth.OAuth2(
         process.env.CLIENT_ID as string,
@@ -95,6 +96,7 @@ async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateMany
             }
         });
 
+        endSync();
         return [];
     }
 
@@ -103,8 +105,6 @@ async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateMany
     const mail_application = await Promise.all(
         message.map((msg) =>
             limit(async () =>  {
-                increment("totalEmails")
-
                 try {
                     if (!msg.id) return null;
                     const main_content = await gmail.users.messages.get({userId: 'me' ,id: msg.id});
@@ -129,6 +129,7 @@ async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateMany
                         });
 
                     if (parsed.companyName === "IGNORE") {
+                        emailsProcessedTotal.inc({ outcome: "ignored" });
                         logger.info({ subject: subject_value }, "Ignored recommendation email");
                         return null;
                     }
@@ -210,7 +211,7 @@ async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateMany
 
 
 
-                    increment("success");
+                    emailsProcessedTotal.inc({ outcome: "success" });
                     return {
 
                         subject: subject_value,
@@ -230,7 +231,7 @@ async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateMany
                         dateApplied: finalDate ?? new Date() 
                     };
                 } catch (error) {
-                    increment("failed");
+                    emailsProcessedTotal.inc({ outcome: "failed" });
                     logger.error({ msgId: msg.id, error},"email processing failed:");
                     return null;
                 }
@@ -255,6 +256,8 @@ async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateMany
         lastSyncAt: new Date()
     }
     });
-    return filtered; 
-} 
+
+    endSync();
+    return filtered;
+}
 export default fetchemails;
