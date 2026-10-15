@@ -32,7 +32,7 @@ model User {
 
 model Application {
   id String @id @default(uuid())
-  messageId   String @unique
+  messageId   String
   subject     String @default("None")
   sender      String @default("None")
   companyName String
@@ -50,6 +50,7 @@ model Application {
   dateApplied DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  @@unique([userID, messageId])
   @@index([userID, updatedAt])
   @@index([userID, normalizedCompany])
   @@index([userID, senderDomain])
