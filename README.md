@@ -200,6 +200,8 @@ Application requests are validated using Zod schemas before reaching the databas
 - offer
 - rejected
 
+Gmail synchronization also writes `Assessment` and `Interview` when the lifecycle engine moves an application forward.
+
 #### Allowed Work Models
 
 - remote
@@ -394,19 +396,18 @@ A major focus of the project was understanding how deployment environments intro
 
 Before running the project locally, ensure the following dependencies are installed:
 
-- Node.js
+- Node.js 24
 - Docker & Docker Compose
-- PostgreSQL
-- Google OAuth credentials
-- AWS account (optional for cloud deployment)
+- Google OAuth credentials with `http://localhost:3000/api/auth/google/callback` as an authorized redirect URI
+- Gemini API key
 
 ---
 
 ### Repository Setup
 
 ```bash
-git clone <repository-url>
-cd career-pulse
+git clone https://github.com/Vaibhavtripathi7/career_pulse.git
+cd career_pulse
 npm install
 ```
 
@@ -414,50 +415,69 @@ npm install
 
 ### Backend Configuration
 
-Create a `.env` file inside the backend directory:
+Copy the example environment file in the repository root and fill in the values:
 
-```env
-DATABASE_URL=
-JWT_SECRET=
-CLIENT_ID=
-CLIENT_SECRET=
-GOOGLE_REDIRECT_URL=
-FRONTEND_URL=
+```bash
+cp .env.example .env
+cp .env.example .env.docker
 ```
+
+| Variable | Local value |
+|----------|-------------|
+| `DATABASE_URL` | `postgresql://<POSTGRES_USER>:<POSTGRES_PASSWORD>@localhost:5432/<POSTGRES_DB>` |
+| `GOOGLE_REDIRECT_URL` | `http://localhost:3000/api/auth/google/callback` |
+| `FRONTEND_URL` | `http://localhost:5173` |
+| `TOKEN_ENCRYPTION_KEY` | output of `openssl rand -hex 32` |
+| `REDIS_HOST` / `REDIS_PORT` | optional, defaults to `localhost:6379` |
+
+`.env.docker` is read by the Postgres container, so `POSTGRES_USER`, `POSTGRES_PASSWORD` and `POSTGRES_DB` must match `DATABASE_URL`. Keep `TOKEN_ENCRYPTION_KEY` the same in both files; tokens encrypted with one key cannot be decrypted with another.
 
 ---
 
 ### Frontend Configuration
 
-Create a `.env` file inside the frontend directory:
-
-```env
-VITE_API_URL=
+```bash
+cp frontend/.env.example frontend/.env
 ```
+
+Set `VITE_API_URL=http://localhost:3000/api`.
 
 ---
 
 ### Running the Development Environment
 
-Start the frontend and backend development environments:
+Start Postgres and Redis, then prepare the database and start the backend:
 
 ```bash
+docker compose up -d
+npx prisma generate
+npx prisma migrate deploy
+npm run build
+npm start
+```
+
+In a second terminal, start the frontend:
+
+```bash
+cd frontend
+npm install
 npm run dev
 ```
 
-This starts the frontend and backend services with hot reload enabled.
+The frontend runs on `http://localhost:5173` and the backend on `http://localhost:3000`.
+
+Run the backend tests with `npm test`.
 
 ---
 
 ### Docker-Based Development
 
-The project also supports containerized local development using Docker Compose:
+Docker Compose runs the infrastructure only: Postgres, Redis, Prometheus and Grafana. The backend runs on the host so it can be rebuilt and restarted quickly.
 
-```bash
-docker compose up --build
-```
-
-This initializes isolated application and database services using internal Docker networking.
+| Service | URL |
+|---------|-----|
+| Prometheus | `http://localhost:9090` |
+| Grafana | `http://localhost:3001` |
 
 ---
 
