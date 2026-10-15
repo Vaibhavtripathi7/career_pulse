@@ -7,6 +7,7 @@ const  authrouter = Router();
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import requiresauth from '../middlewares/auth.js';
+import { encryptToken } from "../utils/crypto.js";
 
 dotenv.config();
 
@@ -49,16 +50,16 @@ authrouter.get('/google/callback', async (req: Request, res:Response)=> {
             update: {
                 name: data.name ?? null,
                 googleId: data.id ?? null,
-                accessToken: tokens.access_token ?? null,
-                ...(tokens.refresh_token && { refreshToken: tokens.refresh_token})
+                accessToken: encryptToken(tokens.access_token ?? null),
+                ...(tokens.refresh_token && { refreshToken: encryptToken(tokens.refresh_token)})
             },
 
             create: {
                 email: data.email ,
                 name: data.name ?? null,
                 googleId: data.id ?? null,
-                accessToken: tokens.access_token ?? null,
-                refreshToken: tokens.refresh_token ?? null 
+                accessToken: encryptToken(tokens.access_token ?? null),
+                refreshToken: encryptToken(tokens.refresh_token ?? null)
             } 
         });
         const payload = {

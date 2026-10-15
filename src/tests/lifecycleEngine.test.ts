@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { classificationToStatus } from "../services/lifecycleEngine.js";
+import { classificationToStatus, toApplicationStatus } from "../services/lifecycleEngine.js";
 
 describe("classificationToStatus", () => {
 
@@ -37,6 +37,26 @@ describe("classificationToStatus", () => {
     expect(
       classificationToStatus("UNKNOWN")
     ).toBeNull();
+  });
+
+});
+
+describe("toApplicationStatus", () => {
+
+  it("maps manual lowercase statuses", () => {
+    expect(toApplicationStatus("applied")).toBe("Applied");
+    expect(toApplicationStatus("interviewing")).toBe("Interview");
+    expect(toApplicationStatus("offer")).toBe("Offer");
+    expect(toApplicationStatus("rejected")).toBe("Rejected");
+  });
+
+  it("keeps engine statuses", () => {
+    expect(toApplicationStatus("Assessment")).toBe("Assessment");
+    expect(toApplicationStatus("Interview")).toBe("Interview");
+  });
+
+  it("returns null for unknown", () => {
+    expect(toApplicationStatus("ghosted")).toBeNull();
   });
 
 });

@@ -129,7 +129,7 @@ The project focuses heavily on backend systems engineering and deployment archit
 </p>
 
 
-- The synchronization pipeline supports a queue-based architecture using BullMQ and Redis for asynchronous email processing. The current production deployment performs scheduled synchronization through cron-based workers while preserving the same ingestion pipeline.
+- The synchronization pipeline supports a queue-based architecture using BullMQ and Redis for asynchronous email processing. The production deployment performed scheduled synchronization through cron-based workers while preserving the same ingestion pipeline.
 
 ---
 
@@ -139,14 +139,16 @@ The project focuses heavily on backend systems engineering and deployment archit
   <img src="./assets/deployment_architecture.png" height="170" >
 </p>
 
-- The frontend is deployed on Vercel, while the backend runs on an AWS EC2 instance behind an Nginx reverse proxy. PostgreSQL is hosted separately on AWS RDS and accessed through restricted security group rules. PM2 is used for process supervision, automatic recovery, and runtime management of backend services.
+> **Deployment status:** the AWS backend is currently paused (free tier credits ended). The architecture below describes the production setup as it ran.
+
+- The frontend is deployed on Vercel, while the backend ran on an AWS EC2 instance behind an Nginx reverse proxy. PostgreSQL was hosted separately on AWS RDS and accessed through restricted security group rules. PM2 was used for process supervision, automatic recovery, and runtime management of backend services.
 
 ---
 
 ### Container & Service Architecture
 
 
-- Docker Compose is used exclusively for local development and environment reproducibility. Production services are deployed directly on AWS infrastructure, with the backend running on an EC2 instance managed by PM2 and PostgreSQL hosted on AWS RDS. Docker is primarily used to standardize local development workflows and simplify onboarding.
+- Docker Compose is used exclusively for local development and environment reproducibility. Production services were deployed directly on AWS infrastructure, with the backend running on an EC2 instance managed by PM2 and PostgreSQL hosted on AWS RDS. Docker is primarily used to standardize local development workflows and simplify onboarding.
 
 ---
 

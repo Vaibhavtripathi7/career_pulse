@@ -11,8 +11,9 @@ import { extractSenderDomain, normalizeCompany } from '../utils/applicationMetad
 import { extractEmailBody } from '../utils/extractEmailBody.js';
 import { classifyEmail } from "../services/emailClassifier.js";
 import { matchApplication } from "../services/applicationMatcher.js";
-import {classificationToStatus, type ApplicationStatus,} from "../services/lifecycleEngine.js";
+import {classificationToStatus, toApplicationStatus,} from "../services/lifecycleEngine.js";
 import { canTransition } from "../services/statusTransition.js";
+import { decryptToken } from "../utils/crypto.js";
 const limit = pLimit(2);
 
 
@@ -45,8 +46,8 @@ async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateMany
 
     )
     oauth2client.setCredentials({
-        refresh_token: user.refreshToken,
-        access_token: user.accessToken
+        refresh_token: decryptToken(user.refreshToken),
+        access_token: decryptToken(user.accessToken)
     });
     const gmail = google.gmail({ version: 'v1', auth: oauth2client});
 
@@ -102,6 +103,7 @@ async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateMany
 
 
 
+    let hasFailures = false;
     const mail_application = await Promise.all(
         message.map((msg) =>
             limit(async () =>  {
@@ -168,9 +170,10 @@ async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateMany
                             ) {
 
                             const currentStatus =
-                                match.application.status as ApplicationStatus;
+                                toApplicationStatus(match.application.status);
 
                             if (
+                                currentStatus &&
                                 canTransition(
                                 currentStatus,
                                 nextStatus
@@ -202,8 +205,10 @@ async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateMany
                     const rawDate = main_content.data.internalDate;
                     const headerDate = list_of_objects?.find(h=> h.name === 'Date')?.value;
         
-                    const finalDate = headerDate
-                        ? new Date(headerDate)
+                    const headerTime = headerDate ? Date.parse(headerDate) : NaN;
+
+                    const finalDate = !isNaN(headerTime)
+                        ? new Date(headerTime)
                         : rawDate
                         ? new Date(Number(rawDate))
                         : null;
@@ -231,6 +236,7 @@ async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateMany
                         dateApplied: finalDate ?? new Date() 
                     };
                 } catch (error) {
+                    hasFailures = true;
                     emailsProcessedTotal.inc({ outcome: "failed" });
                     logger.error({ msgId: msg.id, error},"email processing failed:");
                     return null;
@@ -250,12 +256,14 @@ async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateMany
     }
     logger.info({count: filtered.length}, "Email processed");
 
-    await prisma.user.update({
-        where: { id: userId },
-        data: {
-        lastSyncAt: new Date()
+    if (!hasFailures) {
+        await prisma.user.update({
+            where: { id: userId },
+            data: {
+            lastSyncAt: new Date()
+        }
+        });
     }
-    });
 
     endSync();
     return filtered;
