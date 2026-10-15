@@ -9,6 +9,11 @@ import AddApplicationModal from "../components/modals/AddApplicationModal";
 import api from "../services/api";
 import toast, { Toaster } from "react-hot-toast";
 
+const stageOf = (status?: string) => {
+  const value = status?.toLowerCase();
+  return value === "interview" || value === "assessment" ? "interviewing" : value;
+};
+
 export default function Dashboard() {
   const {
     applications,
@@ -37,10 +42,10 @@ export default function Dashboard() {
   const stats = useMemo(() => {
     return {
       total: applications.length,
-      applied: applications.filter(a => a.status?.toLowerCase() === "applied").length,
-      interviewing: applications.filter(a => a.status?.toLowerCase() === "interviewing").length,
-      offer: applications.filter(a => a.status?.toLowerCase() === "offer").length,
-      rejected: applications.filter(a => a.status?.toLowerCase() === "rejected").length,
+      applied: applications.filter(a => stageOf(a.status) === "applied").length,
+      interviewing: applications.filter(a => stageOf(a.status) === "interviewing").length,
+      offer: applications.filter(a => stageOf(a.status) === "offer").length,
+      rejected: applications.filter(a => stageOf(a.status) === "rejected").length,
     };
   }, [applications]);
 
@@ -48,7 +53,7 @@ export default function Dashboard() {
     const base =
       filter === "all"
         ? applications
-        : applications.filter(a => a.status?.toLowerCase() === filter);
+        : applications.filter(a => stageOf(a.status) === filter);
 
     return base.filter(app =>
       app.companyName.toLowerCase().includes(debouncedSearch.toLowerCase())

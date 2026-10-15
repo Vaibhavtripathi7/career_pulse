@@ -1,4 +1,4 @@
-type Status = 'applied' | 'interviewing' | 'offer' | 'rejected';
+type Status = 'applied' | 'assessment' | 'interviewing' | 'interview' | 'offer' | 'rejected';
 
 interface Props { status: string; }
 
@@ -18,7 +18,23 @@ const STATUS_CONFIG: Record<Status, {
     dot:  '#00FF85',
     glow: 'rgba(164, 255, 136, 0.38)',
   },
+  assessment: {
+    label: 'Assessment',
+    bg:   'rgba(14,165,233,0.1)',
+    text: '#38bdf8',
+    ring: 'rgba(14,165,233,0.25)',
+    dot:  '#0ea5e9',
+    glow: 'rgba(14,165,233,0.2)',
+  },
   interviewing: {
+    label: 'Interviewing',
+    bg:   'rgba(139,92,246,0.1)',
+    text: '#a78bfa',
+    ring: 'rgba(139,92,246,0.25)',
+    dot:  '#8b5cf6',
+    glow: 'rgba(139,92,246,0.2)',
+  },
+  interview: {
     label: 'Interviewing',
     bg:   'rgba(139,92,246,0.1)',
     text: '#a78bfa',
