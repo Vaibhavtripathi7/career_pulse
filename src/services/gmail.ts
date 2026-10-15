@@ -13,6 +13,7 @@ import { classifyEmail } from "../services/emailClassifier.js";
 import { matchApplication } from "../services/applicationMatcher.js";
 import {classificationToStatus, toApplicationStatus,} from "../services/lifecycleEngine.js";
 import { canTransition } from "../services/statusTransition.js";
+import { decryptToken } from "../utils/crypto.js";
 const limit = pLimit(2);
 
 
@@ -45,8 +46,8 @@ async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateMany
 
     )
     oauth2client.setCredentials({
-        refresh_token: user.refreshToken,
-        access_token: user.accessToken
+        refresh_token: decryptToken(user.refreshToken),
+        access_token: decryptToken(user.accessToken)
     });
     const gmail = google.gmail({ version: 'v1', auth: oauth2client});
 
