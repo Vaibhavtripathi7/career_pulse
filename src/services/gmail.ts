@@ -102,6 +102,7 @@ async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateMany
 
 
 
+    let hasFailures = false;
     const mail_application = await Promise.all(
         message.map((msg) =>
             limit(async () =>  {
@@ -203,8 +204,10 @@ async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateMany
                     const rawDate = main_content.data.internalDate;
                     const headerDate = list_of_objects?.find(h=> h.name === 'Date')?.value;
         
-                    const finalDate = headerDate
-                        ? new Date(headerDate)
+                    const headerTime = headerDate ? Date.parse(headerDate) : NaN;
+
+                    const finalDate = !isNaN(headerTime)
+                        ? new Date(headerTime)
                         : rawDate
                         ? new Date(Number(rawDate))
                         : null;
@@ -232,6 +235,7 @@ async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateMany
                         dateApplied: finalDate ?? new Date() 
                     };
                 } catch (error) {
+                    hasFailures = true;
                     emailsProcessedTotal.inc({ outcome: "failed" });
                     logger.error({ msgId: msg.id, error},"email processing failed:");
                     return null;
@@ -251,12 +255,14 @@ async function fetchemails(userId: string): Promise<Prisma.ApplicationCreateMany
     }
     logger.info({count: filtered.length}, "Email processed");
 
-    await prisma.user.update({
-        where: { id: userId },
-        data: {
-        lastSyncAt: new Date()
+    if (!hasFailures) {
+        await prisma.user.update({
+            where: { id: userId },
+            data: {
+            lastSyncAt: new Date()
+        }
+        });
     }
-    });
 
     endSync();
     return filtered;
