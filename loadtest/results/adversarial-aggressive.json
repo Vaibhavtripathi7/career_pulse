@@ -1,0 +1,391 @@
+{
+  "generatedAt": "2026-11-19T20:41:10.051Z",
+  "command": "node loadtest/run.ts --tag adversarial-aggressive --skip-scaling --messages 5000 --users 50 --adv-workers 2 --kill-every-ms 1500 --no-build",
+  "config": {
+    "messages": 5000,
+    "users": 50,
+    "jobShare": 0.1,
+    "dupShare": 0.05,
+    "seed": 20261120
+  },
+  "options": {
+    "workers": [
+      1,
+      2,
+      4,
+      8
+    ],
+    "repeats": 3,
+    "advWorkers": 2,
+    "killEveryMs": 1500,
+    "profile": false
+  },
+  "specs": {
+    "cpuModel": "AMD Ryzen 5 3500U with Radeon Vega Mobile Gfx",
+    "physicalCores": 4,
+    "logicalCpus": 8,
+    "maxMHz": 2100,
+    "ramGiB": 5.7,
+    "os": "EndeavourOS",
+    "kernel": "6.18.57-2-lts",
+    "node": "v24.12.0",
+    "docker": "29.9.1",
+    "loadAverage": [
+      1.48,
+      3.7,
+      5.98
+    ],
+    "memAvailableMB": 3618
+  },
+  "versions": {
+    "postgres": "15.17",
+    "redis": "7.4.9",
+    "bullmq": "5.81.1",
+    "commit": "75584e8"
+  },
+  "oracle": {
+    "type": "oracle",
+    "uniqueMessages": 5000,
+    "deliveries": 5250,
+    "byKind": {
+      "job": {
+        "unique": 500,
+        "stored": 489
+      },
+      "promo": {
+        "unique": 4500,
+        "stored": 0
+      }
+    },
+    "byTemplate": {
+      "newsletter": {
+        "unique": 467,
+        "stored": 0
+      },
+      "shopping-promo": {
+        "unique": 1599,
+        "stored": 0
+      },
+      "lever-confirmation": {
+        "unique": 58,
+        "stored": 58
+      },
+      "dev-notification": {
+        "unique": 416,
+        "stored": 0
+      },
+      "social-notification": {
+        "unique": 416,
+        "stored": 0
+      },
+      "transactional": {
+        "unique": 680,
+        "stored": 0
+      },
+      "job-alert": {
+        "unique": 922,
+        "stored": 0
+      },
+      "greenhouse-confirmation": {
+        "unique": 77,
+        "stored": 77
+      },
+      "naukri-application": {
+        "unique": 49,
+        "stored": 49
+      },
+      "rejection": {
+        "unique": 50,
+        "stored": 50
+      },
+      "ashby-confirmation": {
+        "unique": 48,
+        "stored": 48
+      },
+      "interview-invite": {
+        "unique": 44,
+        "stored": 44
+      },
+      "linkedin-easy-apply": {
+        "unique": 77,
+        "stored": 66
+      },
+      "workday-confirmation": {
+        "unique": 50,
+        "stored": 50
+      },
+      "coding-assessment": {
+        "unique": 25,
+        "stored": 25
+      },
+      "vague-recruiter-named": {
+        "unique": 11,
+        "stored": 11
+      },
+      "vague-recruiter-bare-address": {
+        "unique": 11,
+        "stored": 11
+      }
+    },
+    "llmCallsPerPass": 12,
+    "llmCallsUnique": 11,
+    "generateMs": 162.16412900000032,
+    "pipelineMs": 284.8969849999966,
+    "expectedRows": 489
+  },
+  "scaling": [],
+  "adversarial": {
+    "workers": 2,
+    "batches": 3,
+    "jobsEnqueued": 150,
+    "killEveryMs": 1500,
+    "kills": [
+      {
+        "atMs": 1757,
+        "pid": 149510,
+        "inFlight": [
+          "102",
+          "105"
+        ]
+      },
+      {
+        "atMs": 3342,
+        "pid": 149817,
+        "inFlight": []
+      },
+      {
+        "atMs": 4669,
+        "pid": 149997,
+        "inFlight": []
+      },
+      {
+        "atMs": 6451,
+        "pid": 150150,
+        "inFlight": []
+      },
+      {
+        "atMs": 8138,
+        "pid": 149509,
+        "inFlight": []
+      },
+      {
+        "atMs": 9729,
+        "pid": 150490,
+        "inFlight": []
+      },
+      {
+        "atMs": 11013,
+        "pid": 150302,
+        "inFlight": []
+      },
+      {
+        "atMs": 12810,
+        "pid": 150623,
+        "inFlight": []
+      },
+      {
+        "atMs": 14318,
+        "pid": 150776,
+        "inFlight": []
+      },
+      {
+        "atMs": 15770,
+        "pid": 151116,
+        "inFlight": []
+      },
+      {
+        "atMs": 17428,
+        "pid": 150981,
+        "inFlight": []
+      },
+      {
+        "atMs": 18654,
+        "pid": 151428,
+        "inFlight": []
+      },
+      {
+        "atMs": 20437,
+        "pid": 151250,
+        "inFlight": []
+      },
+      {
+        "atMs": 22084,
+        "pid": 151562,
+        "inFlight": []
+      },
+      {
+        "atMs": 23767,
+        "pid": 151748,
+        "inFlight": []
+      },
+      {
+        "atMs": 25032,
+        "pid": 151882,
+        "inFlight": []
+      },
+      {
+        "atMs": 26557,
+        "pid": 152258,
+        "inFlight": []
+      },
+      {
+        "atMs": 28159,
+        "pid": 152086,
+        "inFlight": []
+      },
+      {
+        "atMs": 29395,
+        "pid": 152395,
+        "inFlight": []
+      },
+      {
+        "atMs": 30951,
+        "pid": 152682,
+        "inFlight": []
+      },
+      {
+        "atMs": 32297,
+        "pid": 152822,
+        "inFlight": []
+      },
+      {
+        "atMs": 34013,
+        "pid": 152949,
+        "inFlight": []
+      },
+      {
+        "atMs": 35797,
+        "pid": 152529,
+        "inFlight": []
+      },
+      {
+        "atMs": 37143,
+        "pid": 153309,
+        "inFlight": []
+      },
+      {
+        "atMs": 38798,
+        "pid": 153453,
+        "inFlight": []
+      },
+      {
+        "atMs": 40322,
+        "pid": 153577,
+        "inFlight": []
+      },
+      {
+        "atMs": 41859,
+        "pid": 153735,
+        "inFlight": []
+      },
+      {
+        "atMs": 43117,
+        "pid": 153102,
+        "inFlight": []
+      },
+      {
+        "atMs": 44909,
+        "pid": 153939,
+        "inFlight": []
+      },
+      {
+        "atMs": 46456,
+        "pid": 154047,
+        "inFlight": []
+      },
+      {
+        "atMs": 48071,
+        "pid": 154365,
+        "inFlight": []
+      },
+      {
+        "atMs": 49823,
+        "pid": 154212,
+        "inFlight": []
+      },
+      {
+        "atMs": 51306,
+        "pid": 154721,
+        "inFlight": []
+      },
+      {
+        "atMs": 52988,
+        "pid": 154880,
+        "inFlight": []
+      },
+      {
+        "atMs": 54454,
+        "pid": 155040,
+        "inFlight": []
+      },
+      {
+        "atMs": 55929,
+        "pid": 155192,
+        "inFlight": []
+      },
+      {
+        "atMs": 57714,
+        "pid": 154568,
+        "inFlight": []
+      },
+      {
+        "atMs": 59459,
+        "pid": 155549,
+        "inFlight": []
+      },
+      {
+        "atMs": 61120,
+        "pid": 155692,
+        "inFlight": []
+      },
+      {
+        "atMs": 62565,
+        "pid": 155346,
+        "inFlight": []
+      }
+    ],
+    "jobsInterrupted": 2,
+    "interruptedFate": {
+      "completed": 2,
+      "failed": 0,
+      "unknown": 0
+    },
+    "stalledEvents": 2,
+    "stalledJobs": 2,
+    "failedJobs": [],
+    "completedJobs": 150,
+    "usersWithoutCompletedJob": 0,
+    "drainMs": 63983,
+    "approxDeliveries": 15036,
+    "approxLlmCalls": 36,
+    "resources": {
+      "windowMs": 63985,
+      "workerCpuSeconds": 48.85,
+      "workerCpuCores": 0.7634601859810893,
+      "perWorkerCpuPct": 1.817762347574022,
+      "machineBusyPct": 22.38550855616024,
+      "meanCpuMHz": 2518.4664329467982,
+      "postgresCpuCores": 0.060661451902789716,
+      "redisCpuCores": 0.028724294756583574,
+      "orchestratorCpuCores": 0.015855294209580373,
+      "peakPgConnections": 6,
+      "peakPgTlsConnections": 6,
+      "avgPgConnections": 1.928125,
+      "redisCommands": 7894,
+      "redisCommandsPerSec": 123.37266546846918,
+      "peakRedisOpsPerSec": 2340,
+      "peakWorkerRssMB": 341.44921875,
+      "minMemAvailableMB": 1849.31640625,
+      "maxSwapUsedMB": 1582.9296875
+    },
+    "verify": {
+      "rows": 489,
+      "expected": 489,
+      "missing": 0,
+      "extra": 0,
+      "duplicateGroups": 0,
+      "pass": true
+    },
+    "recovery": null
+  }
+}
