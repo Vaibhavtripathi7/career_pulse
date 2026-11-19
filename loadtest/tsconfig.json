@@ -1,0 +1,15 @@
+{
+  // Type-check only: `npx tsc -p loadtest`. Node runs the .ts files directly and
+  // production code is imported from dist/, typed by its .d.ts files.
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "..",
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true,
+    "declaration": false,
+    "declarationMap": false,
+    "sourceMap": false
+  },
+  "include": ["./**/*.ts"]
+}

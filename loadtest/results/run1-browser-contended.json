@@ -1,0 +1,1376 @@
+{
+  "generatedAt": "2026-11-19T20:23:51.676Z",
+  "command": "node loadtest/run.ts",
+  "config": {
+    "messages": 100000,
+    "users": 1000,
+    "jobShare": 0.1,
+    "dupShare": 0.05,
+    "seed": 20261120
+  },
+  "options": {
+    "workers": [
+      1,
+      2,
+      4,
+      8
+    ],
+    "repeats": 3,
+    "advWorkers": 4,
+    "killEveryMs": 5000
+  },
+  "specs": {
+    "cpuModel": "AMD Ryzen 5 3500U with Radeon Vega Mobile Gfx",
+    "physicalCores": 4,
+    "logicalCpus": 8,
+    "maxMHz": 2100,
+    "ramGiB": 5.7,
+    "os": "EndeavourOS",
+    "kernel": "6.18.57-2-lts",
+    "node": "v24.12.0",
+    "docker": "29.9.1",
+    "loadAverage": [
+      2.89,
+      7.36,
+      9.25
+    ],
+    "memAvailableMB": 2086
+  },
+  "versions": {
+    "postgres": "15.17",
+    "redis": "7.4.9",
+    "bullmq": "5.81.1",
+    "commit": "75584e8"
+  },
+  "oracle": {
+    "type": "oracle",
+    "uniqueMessages": 100000,
+    "deliveries": 105000,
+    "byKind": {
+      "job": {
+        "unique": 10000,
+        "stored": 9875
+      },
+      "promo": {
+        "unique": 90000,
+        "stored": 0
+      }
+    },
+    "byTemplate": {
+      "newsletter": {
+        "unique": 9133,
+        "stored": 0
+      },
+      "shopping-promo": {
+        "unique": 31638,
+        "stored": 0
+      },
+      "lever-confirmation": {
+        "unique": 1044,
+        "stored": 1044
+      },
+      "dev-notification": {
+        "unique": 8920,
+        "stored": 0
+      },
+      "social-notification": {
+        "unique": 8903,
+        "stored": 0
+      },
+      "transactional": {
+        "unique": 13412,
+        "stored": 0
+      },
+      "job-alert": {
+        "unique": 17994,
+        "stored": 0
+      },
+      "greenhouse-confirmation": {
+        "unique": 1479,
+        "stored": 1479
+      },
+      "naukri-application": {
+        "unique": 1020,
+        "stored": 1020
+      },
+      "rejection": {
+        "unique": 980,
+        "stored": 980
+      },
+      "ashby-confirmation": {
+        "unique": 919,
+        "stored": 919
+      },
+      "interview-invite": {
+        "unique": 995,
+        "stored": 995
+      },
+      "linkedin-easy-apply": {
+        "unique": 1524,
+        "stored": 1399
+      },
+      "workday-confirmation": {
+        "unique": 1015,
+        "stored": 1015
+      },
+      "coding-assessment": {
+        "unique": 498,
+        "stored": 498
+      },
+      "vague-recruiter-named": {
+        "unique": 261,
+        "stored": 261
+      },
+      "vague-recruiter-bare-address": {
+        "unique": 265,
+        "stored": 265
+      }
+    },
+    "llmCallsPerPass": 283,
+    "llmCallsUnique": 265,
+    "generateMs": 2625.5073509999856,
+    "pipelineMs": 4510.312731000023,
+    "expectedRows": 9875
+  },
+  "scaling": [
+    {
+      "workers": 1,
+      "repeat": 1,
+      "jobs": 1000,
+      "deliveries": 105000,
+      "drainMs": 26095,
+      "msgsPerSec": 4023.7593408698986,
+      "jobMs": {
+        "p50": 50,
+        "p95": 62,
+        "max": 231
+      },
+      "endToEndMs": {
+        "p50": 13421,
+        "p95": 24858.399999999998
+      },
+      "histogram": {
+        "p50Ms": 250,
+        "p95Ms": 475,
+        "count": 1000,
+        "buckets": [
+          {
+            "le": 0.5,
+            "count": 1000
+          },
+          {
+            "le": 1,
+            "count": 1000
+          },
+          {
+            "le": 2,
+            "count": 1000
+          },
+          {
+            "le": 5,
+            "count": 1000
+          },
+          {
+            "le": 10,
+            "count": 1000
+          },
+          {
+            "le": 30,
+            "count": 1000
+          },
+          {
+            "le": 60,
+            "count": 1000
+          },
+          {
+            "le": 120,
+            "count": 1000
+          },
+          {
+            "le": null,
+            "count": 1000
+          }
+        ]
+      },
+      "llmCalls": 283,
+      "fakeSourceSeconds": 3.0759234409999494,
+      "failedJobs": 0,
+      "resources": {
+        "windowMs": 26097,
+        "workerCpuSeconds": 21.080000000000002,
+        "workerCpuCores": 0.8077556807295858,
+        "perWorkerCpuPct": 80.77556807295858,
+        "machineBusyPct": 26.291237857074158,
+        "postgresCpuCores": 0.2686785071080969,
+        "redisCpuCores": 0.04729489979691169,
+        "orchestratorCpuCores": 0.0370971759206039,
+        "peakPgConnections": 2,
+        "peakPgTlsConnections": 2,
+        "avgPgConnections": 1.9923664122137406,
+        "redisCommands": 40309,
+        "redisCommandsPerSec": 1544.5836686209143,
+        "peakRedisOpsPerSec": 6490,
+        "peakWorkerRssMB": 430.05859375,
+        "minMemAvailableMB": 1995.25390625,
+        "maxSwapUsedMB": 3888.4765625
+      },
+      "verify": {
+        "rows": 9875,
+        "expected": 9875,
+        "missing": 0,
+        "extra": 0,
+        "duplicateGroups": 0,
+        "pass": true
+      }
+    },
+    {
+      "workers": 2,
+      "repeat": 1,
+      "jobs": 1000,
+      "deliveries": 105000,
+      "drainMs": 17643,
+      "msgsPerSec": 5951.3688148274105,
+      "jobMs": {
+        "p50": 66,
+        "p95": 94.04999999999995,
+        "max": 340
+      },
+      "endToEndMs": {
+        "p50": 8630,
+        "p95": 16782.6
+      },
+      "histogram": {
+        "p50Ms": 250,
+        "p95Ms": 475,
+        "count": 1000,
+        "buckets": [
+          {
+            "le": 0.5,
+            "count": 1000
+          },
+          {
+            "le": 1,
+            "count": 1000
+          },
+          {
+            "le": 2,
+            "count": 1000
+          },
+          {
+            "le": 5,
+            "count": 1000
+          },
+          {
+            "le": 10,
+            "count": 1000
+          },
+          {
+            "le": 30,
+            "count": 1000
+          },
+          {
+            "le": 60,
+            "count": 1000
+          },
+          {
+            "le": 120,
+            "count": 1000
+          },
+          {
+            "le": null,
+            "count": 1000
+          }
+        ]
+      },
+      "llmCalls": 283,
+      "fakeSourceSeconds": 4.357035566999981,
+      "failedJobs": 0,
+      "resources": {
+        "windowMs": 17644,
+        "workerCpuSeconds": 31.01,
+        "workerCpuCores": 1.7575379732486966,
+        "perWorkerCpuPct": 87.87689866243483,
+        "machineBusyPct": 44.829069017415605,
+        "postgresCpuCores": 0.38393640897755626,
+        "redisCpuCores": 0.06715370664248473,
+        "orchestratorCpuCores": 0.050018759918385856,
+        "peakPgConnections": 4,
+        "peakPgTlsConnections": 4,
+        "avgPgConnections": 3.9887640449438204,
+        "redisCommands": 39534,
+        "redisCommandsPerSec": 2240.6483790523694,
+        "peakRedisOpsPerSec": 6945,
+        "peakWorkerRssMB": 412.6328125,
+        "minMemAvailableMB": 1655.3203125,
+        "maxSwapUsedMB": 3876.43359375
+      },
+      "verify": {
+        "rows": 9875,
+        "expected": 9875,
+        "missing": 0,
+        "extra": 0,
+        "duplicateGroups": 0,
+        "pass": true
+      }
+    },
+    {
+      "workers": 4,
+      "repeat": 1,
+      "jobs": 1000,
+      "deliveries": 105000,
+      "drainMs": 16886,
+      "msgsPerSec": 6218.168897311382,
+      "jobMs": {
+        "p50": 121,
+        "p95": 224,
+        "max": 686
+      },
+      "endToEndMs": {
+        "p50": 8886.5,
+        "p95": 16008.249999999998
+      },
+      "histogram": {
+        "p50Ms": 250,
+        "p95Ms": 475,
+        "count": 1000,
+        "buckets": [
+          {
+            "le": 0.5,
+            "count": 1000
+          },
+          {
+            "le": 1,
+            "count": 1000
+          },
+          {
+            "le": 2,
+            "count": 1000
+          },
+          {
+            "le": 5,
+            "count": 1000
+          },
+          {
+            "le": 10,
+            "count": 1000
+          },
+          {
+            "le": 30,
+            "count": 1000
+          },
+          {
+            "le": 60,
+            "count": 1000
+          },
+          {
+            "le": 120,
+            "count": 1000
+          },
+          {
+            "le": null,
+            "count": 1000
+          }
+        ]
+      },
+      "llmCalls": 283,
+      "fakeSourceSeconds": 9.386693670000033,
+      "failedJobs": 0,
+      "resources": {
+        "windowMs": 16887,
+        "workerCpuSeconds": 55.56,
+        "workerCpuCores": 3.290104814354237,
+        "perWorkerCpuPct": 82.25262035885592,
+        "machineBusyPct": 85.62909958258795,
+        "postgresCpuCores": 0.6254498726831297,
+        "redisCpuCores": 0.10069627524130974,
+        "orchestratorCpuCores": 0.06407224492212944,
+        "peakPgConnections": 8,
+        "peakPgTlsConnections": 8,
+        "avgPgConnections": 7.929411764705883,
+        "redisCommands": 39463,
+        "redisCommandsPerSec": 2336.886362290519,
+        "peakRedisOpsPerSec": 6365,
+        "peakWorkerRssMB": 384.78515625,
+        "minMemAvailableMB": 874.59765625,
+        "maxSwapUsedMB": 3874.3046875
+      },
+      "verify": {
+        "rows": 9875,
+        "expected": 9875,
+        "missing": 0,
+        "extra": 0,
+        "duplicateGroups": 0,
+        "pass": true
+      }
+    },
+    {
+      "workers": 8,
+      "repeat": 1,
+      "jobs": 1000,
+      "deliveries": 105000,
+      "drainMs": 18879,
+      "msgsPerSec": 5561.735261401557,
+      "jobMs": {
+        "p50": 242,
+        "p95": 696.3999999999996,
+        "max": 1931
+      },
+      "endToEndMs": {
+        "p50": 7826.5,
+        "p95": 18137.149999999998
+      },
+      "histogram": {
+        "p50Ms": 262.60504201680675,
+        "p95Ms": 498.9495798319328,
+        "count": 1000,
+        "buckets": [
+          {
+            "le": 0.5,
+            "count": 952
+          },
+          {
+            "le": 1,
+            "count": 994
+          },
+          {
+            "le": 2,
+            "count": 1000
+          },
+          {
+            "le": 5,
+            "count": 1000
+          },
+          {
+            "le": 10,
+            "count": 1000
+          },
+          {
+            "le": 30,
+            "count": 1000
+          },
+          {
+            "le": 60,
+            "count": 1000
+          },
+          {
+            "le": 120,
+            "count": 1000
+          },
+          {
+            "le": null,
+            "count": 1000
+          }
+        ]
+      },
+      "llmCalls": 283,
+      "fakeSourceSeconds": 24.50236370399998,
+      "failedJobs": 0,
+      "resources": {
+        "windowMs": 18880,
+        "workerCpuSeconds": 76.95,
+        "workerCpuCores": 4.075741525423729,
+        "perWorkerCpuPct": 50.946769067796616,
+        "machineBusyPct": 98.18447828689233,
+        "postgresCpuCores": 0.7456415254237284,
+        "redisCpuCores": 0.11037346398305062,
+        "orchestratorCpuCores": 0.07046117584745763,
+        "peakPgConnections": 16,
+        "peakPgTlsConnections": 16,
+        "avgPgConnections": 15.698924731182796,
+        "redisCommands": 39602,
+        "redisCommandsPerSec": 2097.563559322034,
+        "peakRedisOpsPerSec": 6314,
+        "peakWorkerRssMB": 306.0703125,
+        "minMemAvailableMB": 538.984375,
+        "maxSwapUsedMB": 4771.42578125
+      },
+      "verify": {
+        "rows": 9875,
+        "expected": 9875,
+        "missing": 0,
+        "extra": 0,
+        "duplicateGroups": 0,
+        "pass": true
+      }
+    },
+    {
+      "workers": 1,
+      "repeat": 2,
+      "jobs": 1000,
+      "deliveries": 105000,
+      "drainMs": 30770,
+      "msgsPerSec": 3412.4146896327593,
+      "jobMs": {
+        "p50": 58,
+        "p95": 85,
+        "max": 252
+      },
+      "endToEndMs": {
+        "p50": 15523.5,
+        "p95": 29062.1
+      },
+      "histogram": {
+        "p50Ms": 250,
+        "p95Ms": 475,
+        "count": 1000,
+        "buckets": [
+          {
+            "le": 0.5,
+            "count": 1000
+          },
+          {
+            "le": 1,
+            "count": 1000
+          },
+          {
+            "le": 2,
+            "count": 1000
+          },
+          {
+            "le": 5,
+            "count": 1000
+          },
+          {
+            "le": 10,
+            "count": 1000
+          },
+          {
+            "le": 30,
+            "count": 1000
+          },
+          {
+            "le": 60,
+            "count": 1000
+          },
+          {
+            "le": 120,
+            "count": 1000
+          },
+          {
+            "le": null,
+            "count": 1000
+          }
+        ]
+      },
+      "llmCalls": 283,
+      "fakeSourceSeconds": 3.8821651069999334,
+      "failedJobs": 0,
+      "resources": {
+        "windowMs": 30770,
+        "workerCpuSeconds": 26.46,
+        "workerCpuCores": 0.8599285017874554,
+        "perWorkerCpuPct": 85.99285017874554,
+        "machineBusyPct": 37.78261047966846,
+        "postgresCpuCores": 0.24701813454663665,
+        "redisCpuCores": 0.05168524536886586,
+        "orchestratorCpuCores": 0.02766168345791355,
+        "peakPgConnections": 2,
+        "peakPgTlsConnections": 2,
+        "avgPgConnections": 1.9935064935064934,
+        "redisCommands": 40764,
+        "redisCommandsPerSec": 1324.7968800779981,
+        "peakRedisOpsPerSec": 6286,
+        "peakWorkerRssMB": 436.984375,
+        "minMemAvailableMB": 1659.41015625,
+        "maxSwapUsedMB": 4278.79296875
+      },
+      "verify": {
+        "rows": 9875,
+        "expected": 9875,
+        "missing": 0,
+        "extra": 0,
+        "duplicateGroups": 0,
+        "pass": true
+      }
+    },
+    {
+      "workers": 2,
+      "repeat": 2,
+      "jobs": 1000,
+      "deliveries": 105000,
+      "drainMs": 24144,
+      "msgsPerSec": 4348.906560636183,
+      "jobMs": {
+        "p50": 84,
+        "p95": 148,
+        "max": 868
+      },
+      "endToEndMs": {
+        "p50": 12071.5,
+        "p95": 23302.35
+      },
+      "histogram": {
+        "p50Ms": 250.75225677031094,
+        "p95Ms": 476.4292878635908,
+        "count": 1000,
+        "buckets": [
+          {
+            "le": 0.5,
+            "count": 997
+          },
+          {
+            "le": 1,
+            "count": 1000
+          },
+          {
+            "le": 2,
+            "count": 1000
+          },
+          {
+            "le": 5,
+            "count": 1000
+          },
+          {
+            "le": 10,
+            "count": 1000
+          },
+          {
+            "le": 30,
+            "count": 1000
+          },
+          {
+            "le": 60,
+            "count": 1000
+          },
+          {
+            "le": 120,
+            "count": 1000
+          },
+          {
+            "le": null,
+            "count": 1000
+          }
+        ]
+      },
+      "llmCalls": 283,
+      "fakeSourceSeconds": 6.206061313999988,
+      "failedJobs": 0,
+      "resources": {
+        "windowMs": 24145,
+        "workerCpuSeconds": 41.55,
+        "workerCpuCores": 1.7208531787119485,
+        "perWorkerCpuPct": 86.04265893559743,
+        "machineBusyPct": 65.50533584431889,
+        "postgresCpuCores": 0.3971102091530334,
+        "redisCpuCores": 0.07417299647960228,
+        "orchestratorCpuCores": 0.04517291364671775,
+        "peakPgConnections": 5,
+        "peakPgTlsConnections": 4,
+        "avgPgConnections": 3.958677685950413,
+        "redisCommands": 40127,
+        "redisCommandsPerSec": 1661.917581279768,
+        "peakRedisOpsPerSec": 5748,
+        "peakWorkerRssMB": 410.46875,
+        "minMemAvailableMB": 913.51953125,
+        "maxSwapUsedMB": 4073.44921875
+      },
+      "verify": {
+        "rows": 9875,
+        "expected": 9875,
+        "missing": 0,
+        "extra": 0,
+        "duplicateGroups": 0,
+        "pass": true
+      }
+    },
+    {
+      "workers": 4,
+      "repeat": 2,
+      "jobs": 1000,
+      "deliveries": 105000,
+      "drainMs": 19422,
+      "msgsPerSec": 5406.240345999382,
+      "jobMs": {
+        "p50": 139,
+        "p95": 262.04999999999995,
+        "max": 869
+      },
+      "endToEndMs": {
+        "p50": 11811,
+        "p95": 18665.45
+      },
+      "histogram": {
+        "p50Ms": 250.25025025025028,
+        "p95Ms": 475.4754754754755,
+        "count": 1000,
+        "buckets": [
+          {
+            "le": 0.5,
+            "count": 999
+          },
+          {
+            "le": 1,
+            "count": 1000
+          },
+          {
+            "le": 2,
+            "count": 1000
+          },
+          {
+            "le": 5,
+            "count": 1000
+          },
+          {
+            "le": 10,
+            "count": 1000
+          },
+          {
+            "le": 30,
+            "count": 1000
+          },
+          {
+            "le": 60,
+            "count": 1000
+          },
+          {
+            "le": 120,
+            "count": 1000
+          },
+          {
+            "le": null,
+            "count": 1000
+          }
+        ]
+      },
+      "llmCalls": 283,
+      "fakeSourceSeconds": 11.047231514999993,
+      "failedJobs": 0,
+      "resources": {
+        "windowMs": 19423,
+        "workerCpuSeconds": 61.239999999999995,
+        "workerCpuCores": 3.152962982031612,
+        "perWorkerCpuPct": 78.8240745507903,
+        "machineBusyPct": 88.1340520880691,
+        "postgresCpuCores": 0.6000430417546206,
+        "redisCpuCores": 0.10825773567420083,
+        "orchestratorCpuCores": 0.059485558358646974,
+        "peakPgConnections": 8,
+        "peakPgTlsConnections": 8,
+        "avgPgConnections": 7.918367346938775,
+        "redisCommands": 39665,
+        "redisCommandsPerSec": 2042.1665036297175,
+        "peakRedisOpsPerSec": 6251,
+        "peakWorkerRssMB": 383.83984375,
+        "minMemAvailableMB": 631.7890625,
+        "maxSwapUsedMB": 4081.1171875
+      },
+      "verify": {
+        "rows": 9875,
+        "expected": 9875,
+        "missing": 0,
+        "extra": 0,
+        "duplicateGroups": 0,
+        "pass": true
+      }
+    },
+    {
+      "workers": 8,
+      "repeat": 2,
+      "jobs": 1000,
+      "deliveries": 105000,
+      "drainMs": 30093,
+      "msgsPerSec": 3489.1835310537335,
+      "jobMs": {
+        "p50": 393.5,
+        "p95": 1033,
+        "max": 2835
+      },
+      "endToEndMs": {
+        "p50": 13962.5,
+        "p95": 29023.049999999996
+      },
+      "histogram": {
+        "p50Ms": 316.85678073510775,
+        "p95Ms": 930.4812834224598,
+        "count": 1000,
+        "buckets": [
+          {
+            "le": 0.5,
+            "count": 789
+          },
+          {
+            "le": 1,
+            "count": 976
+          },
+          {
+            "le": 2,
+            "count": 1000
+          },
+          {
+            "le": 5,
+            "count": 1000
+          },
+          {
+            "le": 10,
+            "count": 1000
+          },
+          {
+            "le": 30,
+            "count": 1000
+          },
+          {
+            "le": 60,
+            "count": 1000
+          },
+          {
+            "le": 120,
+            "count": 1000
+          },
+          {
+            "le": null,
+            "count": 1000
+          }
+        ]
+      },
+      "llmCalls": 283,
+      "fakeSourceSeconds": 42.313465965000056,
+      "failedJobs": 0,
+      "resources": {
+        "windowMs": 30094,
+        "workerCpuSeconds": 96.36,
+        "workerCpuCores": 3.2019671695354552,
+        "perWorkerCpuPct": 40.02458961919319,
+        "machineBusyPct": 98.9753588318261,
+        "postgresCpuCores": 0.6163717020003985,
+        "redisCpuCores": 0.1023046786734896,
+        "orchestratorCpuCores": 0.05898282049577989,
+        "peakPgConnections": 16,
+        "peakPgTlsConnections": 16,
+        "avgPgConnections": 15.587837837837839,
+        "redisCommands": 40647,
+        "redisCommandsPerSec": 1350.6679072240313,
+        "peakRedisOpsPerSec": 5797,
+        "peakWorkerRssMB": 269.94921875,
+        "minMemAvailableMB": 533.265625,
+        "maxSwapUsedMB": 4991.70703125
+      },
+      "verify": {
+        "rows": 9875,
+        "expected": 9875,
+        "missing": 0,
+        "extra": 0,
+        "duplicateGroups": 0,
+        "pass": true
+      }
+    },
+    {
+      "workers": 1,
+      "repeat": 3,
+      "jobs": 1000,
+      "deliveries": 105000,
+      "drainMs": 32512,
+      "msgsPerSec": 3229.5767716535433,
+      "jobMs": {
+        "p50": 60,
+        "p95": 96,
+        "max": 481
+      },
+      "endToEndMs": {
+        "p50": 16388.5,
+        "p95": 30326.35
+      },
+      "histogram": {
+        "p50Ms": 250,
+        "p95Ms": 475,
+        "count": 1000,
+        "buckets": [
+          {
+            "le": 0.5,
+            "count": 1000
+          },
+          {
+            "le": 1,
+            "count": 1000
+          },
+          {
+            "le": 2,
+            "count": 1000
+          },
+          {
+            "le": 5,
+            "count": 1000
+          },
+          {
+            "le": 10,
+            "count": 1000
+          },
+          {
+            "le": 30,
+            "count": 1000
+          },
+          {
+            "le": 60,
+            "count": 1000
+          },
+          {
+            "le": 120,
+            "count": 1000
+          },
+          {
+            "le": null,
+            "count": 1000
+          }
+        ]
+      },
+      "llmCalls": 283,
+      "fakeSourceSeconds": 4.149356068000049,
+      "failedJobs": 0,
+      "resources": {
+        "windowMs": 32513,
+        "workerCpuSeconds": 28.310000000000002,
+        "workerCpuCores": 0.8707286316242735,
+        "perWorkerCpuPct": 87.07286316242735,
+        "machineBusyPct": 41.25417670370658,
+        "postgresCpuCores": 0.23645381847261038,
+        "redisCpuCores": 0.05585907175591313,
+        "orchestratorCpuCores": 0.02658856457417033,
+        "peakPgConnections": 2,
+        "peakPgTlsConnections": 2,
+        "avgPgConnections": 1.9938650306748467,
+        "redisCommands": 40923,
+        "redisCommandsPerSec": 1258.6657644634454,
+        "peakRedisOpsPerSec": 6023,
+        "peakWorkerRssMB": 435.7265625,
+        "minMemAvailableMB": 1332.54296875,
+        "maxSwapUsedMB": 4072.125
+      },
+      "verify": {
+        "rows": 9875,
+        "expected": 9875,
+        "missing": 0,
+        "extra": 0,
+        "duplicateGroups": 0,
+        "pass": true
+      }
+    },
+    {
+      "workers": 2,
+      "repeat": 3,
+      "jobs": 1000,
+      "deliveries": 105000,
+      "drainMs": 39770,
+      "msgsPerSec": 2640.1810409856676,
+      "jobMs": {
+        "p50": 134,
+        "p95": 310.04999999999995,
+        "max": 1135
+      },
+      "endToEndMs": {
+        "p50": 22217.5,
+        "p95": 38687.9
+      },
+      "histogram": {
+        "p50Ms": 252.01612903225805,
+        "p95Ms": 478.8306451612903,
+        "count": 1000,
+        "buckets": [
+          {
+            "le": 0.5,
+            "count": 992
+          },
+          {
+            "le": 1,
+            "count": 1000
+          },
+          {
+            "le": 2,
+            "count": 1000
+          },
+          {
+            "le": 5,
+            "count": 1000
+          },
+          {
+            "le": 10,
+            "count": 1000
+          },
+          {
+            "le": 30,
+            "count": 1000
+          },
+          {
+            "le": 60,
+            "count": 1000
+          },
+          {
+            "le": 120,
+            "count": 1000
+          },
+          {
+            "le": null,
+            "count": 1000
+          }
+        ]
+      },
+      "llmCalls": 283,
+      "fakeSourceSeconds": 12.000546912000006,
+      "failedJobs": 0,
+      "resources": {
+        "windowMs": 39771,
+        "workerCpuSeconds": 58.83,
+        "workerCpuCores": 1.4792185260617032,
+        "perWorkerCpuPct": 73.96092630308516,
+        "machineBusyPct": 88.73548592333387,
+        "postgresCpuCores": 0.4321389454627745,
+        "redisCpuCores": 0.07915755198511483,
+        "orchestratorCpuCores": 0.040437630434236,
+        "peakPgConnections": 4,
+        "peakPgTlsConnections": 4,
+        "avgPgConnections": 3.979695431472081,
+        "redisCommands": 41539,
+        "redisCommandsPerSec": 1044.4545020240878,
+        "peakRedisOpsPerSec": 5755,
+        "peakWorkerRssMB": 346.890625,
+        "minMemAvailableMB": 511.01953125,
+        "maxSwapUsedMB": 5018.671875
+      },
+      "verify": {
+        "rows": 9875,
+        "expected": 9875,
+        "missing": 0,
+        "extra": 0,
+        "duplicateGroups": 0,
+        "pass": true
+      }
+    },
+    {
+      "workers": 4,
+      "repeat": 3,
+      "jobs": 1000,
+      "deliveries": 105000,
+      "drainMs": 21428,
+      "msgsPerSec": 4900.130670151204,
+      "jobMs": {
+        "p50": 154.5,
+        "p95": 277.04999999999995,
+        "max": 990
+      },
+      "endToEndMs": {
+        "p50": 11584,
+        "p95": 20622.75
+      },
+      "histogram": {
+        "p50Ms": 250.25025025025028,
+        "p95Ms": 475.4754754754755,
+        "count": 1000,
+        "buckets": [
+          {
+            "le": 0.5,
+            "count": 999
+          },
+          {
+            "le": 1,
+            "count": 1000
+          },
+          {
+            "le": 2,
+            "count": 1000
+          },
+          {
+            "le": 5,
+            "count": 1000
+          },
+          {
+            "le": 10,
+            "count": 1000
+          },
+          {
+            "le": 30,
+            "count": 1000
+          },
+          {
+            "le": 60,
+            "count": 1000
+          },
+          {
+            "le": 120,
+            "count": 1000
+          },
+          {
+            "le": null,
+            "count": 1000
+          }
+        ]
+      },
+      "llmCalls": 283,
+      "fakeSourceSeconds": 11.924431056000001,
+      "failedJobs": 0,
+      "resources": {
+        "windowMs": 21429,
+        "workerCpuSeconds": 66.15,
+        "workerCpuCores": 3.086938261234776,
+        "perWorkerCpuPct": 77.1734565308694,
+        "machineBusyPct": 91.69711255156157,
+        "postgresCpuCores": 0.5486567268654621,
+        "redisCpuCores": 0.10277231788697537,
+        "orchestratorCpuCores": 0.06194171449904335,
+        "peakPgConnections": 8,
+        "peakPgTlsConnections": 8,
+        "avgPgConnections": 7.934579439252336,
+        "redisCommands": 39869,
+        "redisCommandsPerSec": 1860.5161230108733,
+        "peakRedisOpsPerSec": 5790,
+        "peakWorkerRssMB": 397.12109375,
+        "minMemAvailableMB": 887.33984375,
+        "maxSwapUsedMB": 3983.35546875
+      },
+      "verify": {
+        "rows": 9875,
+        "expected": 9875,
+        "missing": 0,
+        "extra": 0,
+        "duplicateGroups": 0,
+        "pass": true
+      }
+    },
+    {
+      "workers": 8,
+      "repeat": 3,
+      "jobs": 1000,
+      "deliveries": 105000,
+      "drainMs": 20537,
+      "msgsPerSec": 5112.7233773189855,
+      "jobMs": {
+        "p50": 263.5,
+        "p95": 730.0999999999999,
+        "max": 1885
+      },
+      "endToEndMs": {
+        "p50": 9294,
+        "p95": 19776.1
+      },
+      "histogram": {
+        "p50Ms": 271.14967462039044,
+        "p95Ms": 691.7808219178082,
+        "count": 1000,
+        "buckets": [
+          {
+            "le": 0.5,
+            "count": 922
+          },
+          {
+            "le": 1,
+            "count": 995
+          },
+          {
+            "le": 2,
+            "count": 1000
+          },
+          {
+            "le": 5,
+            "count": 1000
+          },
+          {
+            "le": 10,
+            "count": 1000
+          },
+          {
+            "le": 30,
+            "count": 1000
+          },
+          {
+            "le": 60,
+            "count": 1000
+          },
+          {
+            "le": 120,
+            "count": 1000
+          },
+          {
+            "le": null,
+            "count": 1000
+          }
+        ]
+      },
+      "llmCalls": 283,
+      "fakeSourceSeconds": 26.688635371000046,
+      "failedJobs": 0,
+      "resources": {
+        "windowMs": 20538,
+        "workerCpuSeconds": 81.11,
+        "workerCpuCores": 3.949264777485636,
+        "perWorkerCpuPct": 49.36580971857045,
+        "machineBusyPct": 98.32551908908238,
+        "postgresCpuCores": 0.7006348232544547,
+        "redisCpuCores": 0.10639682539682577,
+        "orchestratorCpuCores": 0.05744522348816827,
+        "peakPgConnections": 16,
+        "peakPgTlsConnections": 16,
+        "avgPgConnections": 15.776699029126213,
+        "redisCommands": 39821,
+        "redisCommandsPerSec": 1938.8937579121628,
+        "peakRedisOpsPerSec": 6194,
+        "peakWorkerRssMB": 320.0078125,
+        "minMemAvailableMB": 439.90625,
+        "maxSwapUsedMB": 4794.45703125
+      },
+      "verify": {
+        "rows": 9875,
+        "expected": 9875,
+        "missing": 0,
+        "extra": 0,
+        "duplicateGroups": 0,
+        "pass": true
+      }
+    }
+  ],
+  "adversarial": {
+    "workers": 4,
+    "batches": 3,
+    "jobsEnqueued": 3000,
+    "killEveryMs": 5000,
+    "kills": [
+      {
+        "atMs": 6350,
+        "pid": 56905,
+        "inFlight": [
+          "335",
+          "338"
+        ]
+      },
+      {
+        "atMs": 11626,
+        "pid": 56916,
+        "inFlight": [
+          "639",
+          "642"
+        ]
+      },
+      {
+        "atMs": 16051,
+        "pid": 57576,
+        "inFlight": [
+          "848",
+          "851"
+        ]
+      },
+      {
+        "atMs": 21995,
+        "pid": 57942,
+        "inFlight": [
+          "1180",
+          "1185"
+        ]
+      },
+      {
+        "atMs": 27612,
+        "pid": 56903,
+        "inFlight": [
+          "1525",
+          "1529"
+        ]
+      },
+      {
+        "atMs": 32909,
+        "pid": 59059,
+        "inFlight": [
+          "1940",
+          "1942"
+        ]
+      },
+      {
+        "atMs": 37187,
+        "pid": 58262,
+        "inFlight": [
+          "2278",
+          "2281"
+        ]
+      },
+      {
+        "atMs": 43178,
+        "pid": 58668,
+        "inFlight": [
+          "2773",
+          "2776"
+        ]
+      },
+      {
+        "atMs": 48206,
+        "pid": 59475,
+        "inFlight": []
+      },
+      {
+        "atMs": 53037,
+        "pid": 60628,
+        "inFlight": []
+      },
+      {
+        "atMs": 58554,
+        "pid": 56904,
+        "inFlight": []
+      },
+      {
+        "atMs": 62641,
+        "pid": 61062,
+        "inFlight": []
+      },
+      {
+        "atMs": 68568,
+        "pid": 60235,
+        "inFlight": []
+      },
+      {
+        "atMs": 74040,
+        "pid": 61533,
+        "inFlight": []
+      },
+      {
+        "atMs": 79642,
+        "pid": 59826,
+        "inFlight": []
+      },
+      {
+        "atMs": 83842,
+        "pid": 62460,
+        "inFlight": []
+      },
+      {
+        "atMs": 88914,
+        "pid": 63931,
+        "inFlight": []
+      }
+    ],
+    "jobsInterrupted": 16,
+    "interruptedFate": {
+      "completed": 16,
+      "failed": 0,
+      "unknown": 0
+    },
+    "stalledEvents": 16,
+    "stalledJobs": 16,
+    "failedJobs": [],
+    "completedJobs": 3000,
+    "usersWithoutCompletedJob": 0,
+    "drainMs": 94229,
+    "approxDeliveries": 313480,
+    "approxLlmCalls": 846,
+    "resources": {
+      "windowMs": 94230,
+      "workerCpuSeconds": 178.58,
+      "workerCpuCores": 1.8951501644911388,
+      "perWorkerCpuPct": 9.024524592814947,
+      "machineBusyPct": 51.76305032500168,
+      "postgresCpuCores": 0.31211484665180944,
+      "redisCpuCores": 0.06758967420142212,
+      "orchestratorCpuCores": 0.035105836782341075,
+      "peakPgConnections": 12,
+      "peakPgTlsConnections": 12,
+      "avgPgConnections": 7.381663113006397,
+      "redisCommands": 116925,
+      "redisCommandsPerSec": 1240.8468640560332,
+      "peakRedisOpsPerSec": 16886,
+      "peakWorkerRssMB": 416.8828125,
+      "minMemAvailableMB": 906.67578125,
+      "maxSwapUsedMB": 4227.58984375
+    },
+    "verify": {
+      "rows": 9875,
+      "expected": 9875,
+      "missing": 0,
+      "extra": 0,
+      "duplicateGroups": 0,
+      "pass": true
+    },
+    "recovery": null
+  }
+}

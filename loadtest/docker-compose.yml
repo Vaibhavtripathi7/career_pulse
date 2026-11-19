@@ -1,0 +1,45 @@
+# Postgres and Redis for the load test. Different ports and volumes from the
+# dev stack, so a run can wipe its data freely. Bound to localhost only.
+name: careerpulse-loadtest
+
+services:
+  lt-postgres:
+    image: postgres:15-alpine
+    container_name: careerpulse_lt_postgres
+    environment:
+      POSTGRES_USER: loadtest
+      POSTGRES_PASSWORD: loadtest
+      POSTGRES_DB: careerpulse_loadtest
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - ./.certs:/certs:ro
+    # src/db.ts uses TLS when NODE_ENV=production, so serve TLS with the
+    # self-signed cert run.ts creates in .certs/
+    entrypoint:
+      - sh
+      - -c
+      - >-
+        cp /certs/server.crt /certs/server.key /var/lib/postgresql/ &&
+        chown postgres:postgres /var/lib/postgresql/server.crt /var/lib/postgresql/server.key &&
+        chmod 600 /var/lib/postgresql/server.key &&
+        exec docker-entrypoint.sh postgres
+        -c ssl=on
+        -c ssl_cert_file=/var/lib/postgresql/server.crt
+        -c ssl_key_file=/var/lib/postgresql/server.key
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U loadtest -d careerpulse_loadtest"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  lt-redis:
+    image: redis:7-alpine
+    container_name: careerpulse_lt_redis
+    ports:
+      - "127.0.0.1:6380:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
