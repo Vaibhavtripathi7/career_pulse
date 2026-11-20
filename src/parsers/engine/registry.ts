@@ -92,7 +92,7 @@ export const SOURCE_REGISTRY: SourceRule[] = [
       /jobs? (?:for you|matching|based on)/i,
       /update your (?:profile|resume)/i,
       /profile (?:views?|visibility)/i,
-      /subscription|premium|fastforward/i,
+      /\bsubscription\b|\bnaukri premium\b|\bpremium (?:plan|membership|services?)\b|\bfastforward\b/i,
       /\d+ (?:new )?(?:jobs?|openings|vacancies)/i,
       /top (?:companies|recruiters)/i,
       /jobs? (?:this week|today|near you)/i,
@@ -139,11 +139,11 @@ export const SOURCE_REGISTRY: SourceRule[] = [
       /\byou applied\b/i,
     ],
     ignorePatterns: [
-      /invitation|connect|network|endorse/i,
+      /\binvitations?\b|\bconnect(?:ions?)?\b|\byour network\b|\bendorse(?:d|ments?)?\b/i,
       /viewed your profile|appear(?:ed)? in/i,
       /jobs? (?:you may|for you|similar|alert)/i,
-      /hiring in your network|trending|newsletter/i,
-      /premium|learning|course/i,
+      /hiring in your network|\btrending\b|\bnewsletter\b/i,
+      /\blinkedin premium\b|\btry premium\b|\bpremium (?:free )?trial\b|\blinkedin learning\b|\b(?:new|free|top) courses?\b|\bcourses? for you\b/i,
     ],
     company: [
       {
@@ -231,7 +231,7 @@ export const SOURCE_REGISTRY: SourceRule[] = [
     ignorePatterns: [
       /new (?:internships?|jobs?)/i,
       /internships? (?:for you|matching)/i,
-      /trainings?|course|certificate|discount/i,
+      /\binternshala trainings?\b|\bonline trainings?\b|\bget (?:a |your )?certificate\b|\bcourses? for you\b|\bdiscount\b|\b\d+% off\b/i,
     ],
     company: [
       {
